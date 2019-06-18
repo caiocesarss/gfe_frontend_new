@@ -1,25 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { HashRouter} from "react-router-dom";
+import 'typeface-roboto';
+
+import { makeStyles} from "@material-ui/core/styles";
+
+import Routes from './Routes';
+import  AppBar  from './components/template/AppBar';
+
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+  }
+}))
 
 function App() {
+  const classes = useStyles();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <HashRouter basename="/app">
+    <div className={classes.root}>
+    
+    <AppBar />
+      
+    <Routes />
     </div>
+    </HashRouter>
   );
 }
 
