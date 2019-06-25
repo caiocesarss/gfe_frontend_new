@@ -1,7 +1,8 @@
-import React from 'react'
+
 import axios from 'axios'
 import { toastr } from 'react-redux-toastr';
 import { reset as resetForm, initialize } from 'redux-form';
+
 
 
 const BASE_URL = 'http://localhost:3003/api';
@@ -40,12 +41,23 @@ export function getPartyAccounts(params) {
     }
 }
 
+export async function createNewSaleInit(values){
+    const params = {construction_id: values.construction_id}
+    const request = await axios.get(`${BASE_URL}/construction/${values.construction_id}`);
+    const result = {...values, construction_name: request.data[0].name}
+    return {
+        type: 'NEW_SALE_CREATED',
+        payload: result
+    }
+}
+
 export function createNewSale(values, ownProps) { 
    return async dispatch => {
     const request = await axios.post(`${BASE_URL}/salesorders`,values )
         .then(resp => {
             toastr.success('Sucesso', 'Operação realizada com sucesso')
-            ownProps.history.push('/vendas/incluircliente')
+            
+            ownProps.history.push(`/vendas/incluircliente/${resp.data[0].order_id}`)
             //dispatch(init())
         })
         .catch (e => {
@@ -56,7 +68,19 @@ export function createNewSale(values, ownProps) {
 }
 
 export function createSaleParty(values, ownProps){
-    return console.log(values)
+    return async dispatch => {
+    
+    const request = await axios.post(`${BASE_URL}/salesorders/adddetail`,values )
+        .then(resp => {
+            toastr.success('Sucesso', 'Operação realizada com sucesso')
+            //ownProps.history.push('/vendas/incluircliente')
+            //dispatch(init())
+        })
+        .catch (e => {
+            console.log(e)
+            //e.response.data.errors.forEach(error => toastr.error('Erro', error))
+        })
+    }
 }
 
 function submit (values, method) {

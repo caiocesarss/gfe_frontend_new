@@ -47,6 +47,7 @@ export default props => {
     <React.Fragment>
     
         <TextField {...props.textField} 
+            variant="outlined"
             onChange={handleChange('fieldvalue')}
             label={props.label}
             className={classes.textField}
@@ -54,6 +55,7 @@ export default props => {
             name={props.name}
             onBlur={props.onBlur}
             type={props.type}
+            margin={props.margin || "dense"}
             {...input}
             
              />

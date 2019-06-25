@@ -44,6 +44,7 @@ class SalesOrders extends Component {
   });
   
   render(){
+    const { forwardedRef, ...props } = this.props;
     const { classes } = this.props;
     const list = this.props.list || [];
   
@@ -197,5 +198,8 @@ const mapDispatchToProps = dispatch =>
 
 const retorno = connect(mapStateToPropos, mapDispatchToProps)(SalesOrders)
 
-export default withStyles(styles)(retorno)
+const Comp = withStyles(styles)(retorno)
+
+export default 
+React.forwardRef((props, ref) => <Comp {...props} forwardedRef={ref} />);
 

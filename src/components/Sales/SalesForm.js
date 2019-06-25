@@ -13,7 +13,7 @@ import LabelAndInput from '../../common/LabelAndInput';
 import InputSelect from '../../common/InputSelect';
 import PageHeader from '../template/PageHeader';
 import { getList, getCustomList} from '../../common/SelectActions';
-import {createNewSale} from './SalesOrdersActions';
+import {createNewSale, createNewSaleInit} from './SalesOrdersActions';
 import MaskInput from '../../common/MaskInput';
 import MaskedInput from '../../common/MaskedInput';
 import SalesFormAddParty from './SalesFormAddParty';
@@ -33,13 +33,18 @@ class SalesForm extends Component {
         const cubStrip = Number(cubValue.replace(/[^\d,-]/g, '')); 
         const cubAmount = amount/cubStrip;
         if (cubAmount) {
-        this.props.change('cub_ammount', cubAmount);
+        this.props.change('cub_amount', cubAmount);
         }
 
     }
 
+    createNewSaleInit(data){
+        
+        this.props.createNewSaleInit(data);
+        this.props.createNewSale(data)
 
-
+    }
+    
     render (){
         const { forwardedRef, ...props } = this.props;
         const { classes, amount, handleSubmit } = this.props;
@@ -68,7 +73,7 @@ class SalesForm extends Component {
             buttonType="primary"
              />
         <Grid item xs={12}>
-            <form role="form" onSubmit={handleSubmit(this.props.createNewSale)} >
+            <form role="form" onSubmit={handleSubmit(data => this.createNewSaleInit(data))} >
                 <Grid container spacing={1}>
                     <Grid item xs={12} md={3}>
                         <Field 
@@ -88,7 +93,7 @@ class SalesForm extends Component {
                             label="Unidade(s)" 
                         />
                     </Grid>
-                    <Grid item xs={12} md={2}>
+                    <Grid item xs={12} md={4}>
                         <Field 
                             name="amount"
                             textField={{fullWidth:true}}
@@ -109,18 +114,14 @@ class SalesForm extends Component {
                     </Grid>
                     <Grid item xs={12} md={2}>
                         <Field 
-                            name="cub_ammount"
+                            name="cub_amount"
                             textField={{fullWidth:true}}
                             component={LabelAndInput}
                             label="Valor em CUB"
                             {...currencyMaskDec}
                         />
                     </Grid>
-                    <Grid item xs={12} md={2}>
-                       
-                        <Button type="submit" variant="contained" className={classes.button}>Enviar</Button>
-                       
-                    </Grid>
+                    
                     {/*
                     USAR FIELD ARRAY
                     <Grid item xs={12} md={12}>
@@ -128,6 +129,31 @@ class SalesForm extends Component {
                     </Grid>
                     */}
                     
+                </Grid>
+                <Grid container spacing={1}>
+                    <Grid item xs={12} md={6}>
+                        <Field 
+                            name="details"
+                            textField={{fullWidth:true}}
+                            component={LabelAndInput}
+                            label="Detalhes" 
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Field 
+                            name="payment_details"
+                            textField={{fullWidth:true}}
+                            component={LabelAndInput}
+                            label="Detalhes do Pagamento" 
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={1}>
+                    <Grid item xs={12} md={2}>
+                       
+                       <Button size="large" color="primary" type="submit" variant="contained" className={classes.button}>Enviar</Button>
+                      
+                   </Grid>
                 </Grid>
             </form>
         </Grid>
@@ -157,6 +183,7 @@ const mapDispatchToProps = (dispatch, ownProps) =>
       getList, 
       getCustomList, 
       createNewSale: itm => dispatch(createNewSale(itm, ownProps)), 
+      createNewSaleInit,
       change
     }, dispatch);
 

@@ -30,7 +30,7 @@ class PartyAccount extends Component {
 
   componentWillMount() {
     const { match: { params } } = this.props;
-    console.log(params)
+ 
     this.props.getList(params.party_id);
   }
 

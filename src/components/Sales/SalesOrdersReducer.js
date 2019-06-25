@@ -1,7 +1,8 @@
 const INITIAL_STATE = { 
   list: [],
   salePartyList: [],
-  salePartyAccountList: []
+  salePartyAccountList: [],
+  saleData: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -12,6 +13,8 @@ export default (state = INITIAL_STATE, action) => {
       return {...state, salePartyList: action.payload.data }
     case "SALE_PARTY_ACCOUNTS_FETCHED":
       return {...state, salePartyAccountList: action.payload.data }
+    case "NEW_SALE_CREATED":
+      return {...state, saleData: action.payload}
     default:
       return state
   }

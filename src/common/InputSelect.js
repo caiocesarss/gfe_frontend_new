@@ -2,8 +2,10 @@ import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -23,7 +25,7 @@ export default props => {
   //   constructionSelect: '',
   //    nomeObra: '',
   //  });
-  console.log(props.input);
+  
 
   function handleChange(event) {
 
@@ -37,19 +39,36 @@ export default props => {
   const {
     input,
     label,
-    meta: { touched, error },
+    meta: { touched, error, warning },
     ...custom
-  } = props
+  } = props;
+  const inputLabel = React.useRef(null);
   return (
     <React.Fragment>
 
-      <InputLabel htmlFor="age-simple">{props.label}</InputLabel>
-      <Select {...props.selectField}
+      <TextField
+        {...props.selectField}
+        select
+        label={props.label}
+        inputProps={props.inputProps}
+        className={classes.textField}
         value={values.constructionSelect}
         onChange={handleChange}
-        inputProps={props.inputProps}
+        margin={props.margin || "dense"}
+        SelectProps={{
+          MenuProps: {
+            className: classes.menu,
+          },
+        }}
+        
+       
+        variant="outlined"
         {...input}
+        
       >
+
+      
+   
         <MenuItem value="">
           <em> </em>
         </MenuItem>
@@ -59,8 +78,8 @@ export default props => {
           )
         })}
 
-      </Select>
-
+      </TextField>
+    
     </React.Fragment>
   )
 }

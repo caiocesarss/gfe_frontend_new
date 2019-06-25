@@ -48,10 +48,12 @@ class Partyform extends Component {
                             component={LabelAndInput}
                             label="Nome" /> 
                     </Grid>
+
                     <Grid item xs={6}>
                         <Field name="type"
                             component={InputSelect}
                             label="Tipo"
+                            inputProps={{name: 'constructionSelect', id:'selconst'}}
                             selectItems={selectItems} /> 
                     </Grid>
                     </Grid>

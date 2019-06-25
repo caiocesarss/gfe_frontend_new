@@ -21,27 +21,6 @@ export function defaultPageStyle () {
   )
 }
 
-export const xdefaultPageStyle = theme => {
-    const style = {
-      content: {
-        flexGrow: 1,
-        padding: theme.spacing(3),
-        "margin-top": "70px"
-      },
-      toolbar: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        padding: "0 8px",
-        "margin-top": "70px",
-        ...theme.mixins.toolbar
-      }
-    }
-    return (
-        style
-    )
-
-}
 
 export function defaultClass() {
   return {
@@ -60,6 +39,12 @@ export function defaultClass() {
       justifyContent: "flex-start",
       padding: "0 8px",
       "margin-top": "70px"
+    },
+    party_title:{
+      "margin-bottom": "-10px"
+    },
+    add_sale_detail: {
+      "margin-bottom": "20px"
     }
   }
 }

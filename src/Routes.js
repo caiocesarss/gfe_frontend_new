@@ -28,7 +28,7 @@ export default props => {
     <Route exact path="/payables" component={Payables} />
     <Route exact path="/vendas" component={SalesOrders} />
     <Route  path="/vendas/detalhes" component={SalesForm} />
-    <Route  path="/vendas/incluircliente" component={SalesFormAddParty} />
+    <Route  path="/vendas/incluircliente/:order_id" component={SalesFormAddParty} />
     <Route path="*" component={Home} />
     </Switch>
   
