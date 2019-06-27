@@ -1,6 +1,6 @@
 import axios from 'axios'
+import { BASE_URL } from '../env';
 
-const BASE_URL = 'http://localhost:3003/api';
 const INITIAL_VALUES = {
 list: []
 }

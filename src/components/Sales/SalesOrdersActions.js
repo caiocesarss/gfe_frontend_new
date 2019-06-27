@@ -1,11 +1,9 @@
-
 import axios from 'axios'
 import { toastr } from 'react-redux-toastr';
 import { reset as resetForm, initialize } from 'redux-form';
+import { BASE_URL } from '../../env';
 
 
-
-const BASE_URL = 'http://localhost:3003/api';
 const INITIAL_VALUES = {
 list: [],
 construction: '',
