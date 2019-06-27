@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Field, change } from 'redux-form'
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { Field, change, registerField } from 'redux-form'
 import { withStyles } from '@material-ui/styles';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import { Add as AddIcon, Delete as DeleteIcon } from '@material-ui/icons';
 import Fab from '@material-ui/core/Fab';
@@ -55,14 +56,17 @@ class AddPartyArray extends Component {
 
   }
 
-  fillAmountRemaining(value, entryAmount, amount, inputChange){
+  fillAmountRemaining(value, cubExRate, entryAmount, amount, inputChange, inputChange2){
     let entryAmountArray = document.getElementsByName(entryAmount)
     let entryAmountValue = Number(entryAmountArray[0].value.replace(/[^\d,-]/g, ''));
     let amountArray = document.getElementsByName(amount)
     let amountValue = Number(amountArray[0].value.replace(/[^\d,-]/g, '')); 
     const calc = amountValue-entryAmountValue-Number(value.replace(/[^\d,-]/g, ''));
-    this.props.change("SalesFormAddParty", inputChange, calc);
-    
+    this.props.change("SalesFormAddParty", inputChange, calc.toFixed(4));
+
+    //cubExRate = 1792;
+    const cubAmount = Number(value.replace(/[^\d,-]/g, ''))/cubExRate;
+    this.props.change("SalesFormAddParty", inputChange2, cubAmount.toFixed(4));
   }
 
   fillMonthlyAmount(months, cubExRate, amountRemaining, inputChange, inputChange2){
@@ -73,8 +77,8 @@ class AddPartyArray extends Component {
     }
     const calc = amountRemainingValue/Number(months);
     const calc2 = calc/cubExRate;
-    this.props.change("SalesFormAddParty", inputChange, calc);
-    this.props.change("SalesFormAddParty", inputChange2, calc2);
+    this.props.change("SalesFormAddParty", inputChange, calc.toFixed(4));
+    this.props.change("SalesFormAddParty", inputChange2, calc2.toFixed(4));
   }
 
   fillMonthlyParcelAmount(qt, cubExRate, monthlyAmount, inputChange, inputChange2){
@@ -85,10 +89,27 @@ class AddPartyArray extends Component {
     }
     const calc = monthlyAmountValue/Number(qt);
     const calc2 = calc/cubExRate;
-    this.props.change("SalesFormAddParty", inputChange, calc);
-    this.props.change("SalesFormAddParty", inputChange2, calc2);
+    this.props.change("SalesFormAddParty", inputChange, calc.toFixed(4));
+    this.props.change("SalesFormAddParty", inputChange2, calc2.toFixed(4));
   }
 
+  fillCubAmount(amount, cubExRate, inputChange){
+    //cubExRate = 1792;
+    if (!cubExRate || cubExRate.length < 1) {
+      return false;
+    }
+    const calc = Number(amount.replace(/[^\d,-]/g, ''))/ Number(cubExRate)
+    this.props.change("SalesFormAddParty", inputChange, calc.toFixed(4));
+  }
+
+  fillEntryCubAmount(amount, cubExRate, inputChange){
+    //cubExRate = 1792;
+    if (!cubExRate || cubExRate.length < 1) {
+      return false;
+    }
+    const cubAmount = Number(amount.replace(/[^\d,-]/g, ''))/cubExRate
+    this.props.change("SalesFormAddParty", inputChange, cubAmount.toFixed(4));
+  }
 
   render() {
     const { classes, forwardedRef, fields, meta: { error, submitFailed }, ...props } = this.props;
@@ -136,6 +157,18 @@ class AddPartyArray extends Component {
               </Grid>
               <Grid container spacing={1}>
                 <Grid item xs={12} md={4}>
+                  <Field 
+                    component="input"
+                    name={`${member}.entry_cub_amount`}
+                    type="hidden"
+                    inputProps={{ name: `${member}.entry_cub_amount` }}
+                  />
+                  <Field 
+                    component="input"
+                    name={`${member}.further_cub_amount`}
+                    type="hidden"
+                    inputProps={{ name: `${member}.further_cub_amount` }}
+                  />
                   <Field
                     name={`${member}.party_id`}
                     selectField={{ fullWidth: true }}
@@ -160,14 +193,26 @@ class AddPartyArray extends Component {
 
                   />
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={2}>
                   <Field 
                       name={`${member}.party_amount`}
                       textField={{fullWidth:true}}
                       component={LabelAndInput}
                       label="Valor"
                       inputProps={{ name: `${member}.party_amount` }}
+                      onBlur={data => this.fillCubAmount(data.target.value, saleData.cub_ex_rate, `${member}.cub_amount`)}
                       {...currencyMask}
+                  />
+                </Grid>
+                <Grid item xs={12} md={1}>
+                  <Field 
+                      name={`${member}.cub_amount`}
+                      textField={{fullWidth:true}}
+                      component={LabelAndInput}
+                      label="Valor em CUB"
+                      inputProps={{ name: `${member}.cub_amount` }}
+                      
+                      {...currencyMaskDec}
                   />
                 </Grid>
               </Grid>
@@ -180,6 +225,7 @@ class AddPartyArray extends Component {
                       id={`${member}.entry_amount`}
                       label="Valor Entrada"
                       inputProps={{ name: `${member}.entry_amount` }}
+                      onBlur={data => this.fillEntryCubAmount(data.target.value, saleData.cub_ex_rate, `${member}.entry_cub_amount`)}
                       {...currencyMask}
                   />
                 </Grid>
@@ -191,7 +237,7 @@ class AddPartyArray extends Component {
                       component={LabelAndInput}
                       label="Total Reforços"
                       inputProps={{ name: `${member}.further_total_amount` }}
-                      onBlur={data => this.fillAmountRemaining(data.target.value, `${member}.entry_amount`, `${member}.party_amount`, `${member}.amount_remaining`)}
+                      onBlur={data => this.fillAmountRemaining(data.target.value, saleData.cub_ex_rate, `${member}.entry_amount`, `${member}.party_amount`, `${member}.amount_remaining`, `${member}.further_cub_amount`)}
                       {...currencyMask}
                   />
                 </Grid>
@@ -273,7 +319,7 @@ class AddPartyArray extends Component {
                       component={LabelAndInput}
                       label="Dia(s) vencto"
                       inputProps={{ name: `${member}.monthly_due_days` }}
-                      validate={validateMonthDays}
+                      
                   />
                 </Grid>
                 <Grid item xs={12} md={1}>
@@ -294,7 +340,9 @@ class AddPartyArray extends Component {
   }
 }
 
-
+AddPartyArray.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
 const mapStateToPropos = state => ({
   saleData: state.salesOrders.saleData,
@@ -305,6 +353,6 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators({ getParties, getPartyAccounts, change }, dispatch);
 
 AddPartyArray = connect(mapStateToPropos, mapDispatchToProps)(AddPartyArray)
-AddPartyArray =  withStyles(styles)(AddPartyArray)
-export default AddPartyArray
-React.forwardRef((props, ref) => <AddPartyArray {...props} forwardedRef={ref} />);
+const Comp  =  withStyles(styles)(AddPartyArray)
+export default 
+React.forwardRef((props, ref) => <Comp {...props} forwardedRef={ref} />);

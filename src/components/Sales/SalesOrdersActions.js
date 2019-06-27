@@ -17,10 +17,18 @@ salePartyList: [],
 salePartyAccountList: []
 }
 
-export function getList() {
-    const request = axios.get(`${BASE_URL}/salesorders`)
+export async function getList() {
+    const request = await axios.get(`${BASE_URL}/salesorders`)
     return {
         type: 'SALES_ORDERS_FETCHED',
+        payload: request
+    }
+}
+
+export async function getSaleDetails(order_id){
+    const request = await axios.get(`${BASE_URL}/salesorders/details/${order_id}`)
+    return {
+        type: "SALE_DETAILS_FETCHED", 
         payload: request
     }
 }
@@ -73,7 +81,8 @@ export function createSaleParty(values, ownProps){
     const request = await axios.post(`${BASE_URL}/salesorders/adddetail`,values )
         .then(resp => {
             toastr.success('Sucesso', 'Operação realizada com sucesso')
-            //ownProps.history.push('/vendas/incluircliente')
+          
+            ownProps.history.push('/vendas/detalhesvenda/'+resp.data)
             //dispatch(init())
         })
         .catch (e => {

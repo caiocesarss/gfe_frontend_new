@@ -8,16 +8,14 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { reduxForm, Field, formValueSelector, formValues, change, FieldArray } from 'redux-form';
 import { createNumberMask, createTextMask } from 'redux-form-input-masks';
-
+import dateFormat from 'dateformat'
 import LabelAndInput from '../../common/LabelAndInput';
 import InputSelect from '../../common/InputSelect';
 import PageHeader from '../template/PageHeader';
 import { getList, getCustomList} from '../../common/SelectActions';
 import {createNewSale, createNewSaleInit} from './SalesOrdersActions';
-import MaskInput from '../../common/MaskInput';
-import MaskedInput from '../../common/MaskedInput';
-import SalesFormAddParty from './SalesFormAddParty';
-import AddPartyArray from './AddPartyArray';
+
+import DateFieldNative from '../../common/DateFieldNative';
 
 const styles = defaultClass
 
@@ -26,6 +24,9 @@ class SalesForm extends Component {
     componentWillMount() {
         const { match: { params } } = this.props;
         this.props.getCustomList('constructions');
+        let now = new Date();
+        now = dateFormat(now, "yyyy-mm-dd")
+        this.props.dispatch(change("SalesForm", "ordered_date", now));
       }
     
     updateCubAmount(cubValue, amount){
@@ -63,6 +64,8 @@ class SalesForm extends Component {
             decimalPlaces: 4,
             locale: 'pt-BR',
           })
+        let now = new Date();
+        now = dateFormat(now, "yyyy-mm-dd")
   
     return (
         <div className={classes.content} ref={forwardedRef}>
@@ -93,7 +96,7 @@ class SalesForm extends Component {
                             label="Unidade(s)" 
                         />
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={3}>
                         <Field 
                             name="amount"
                             textField={{fullWidth:true}}
@@ -112,13 +115,21 @@ class SalesForm extends Component {
                             onBlur={data => this.updateCubAmount(data.target.value, amount)}
                         />
                     </Grid>
-                    <Grid item xs={12} md={2}>
+                    <Grid item xs={12} md={1}>
                         <Field 
                             name="cub_amount"
                             textField={{fullWidth:true}}
                             component={LabelAndInput}
                             label="Valor em CUB"
                             {...currencyMaskDec}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={2}>
+                        <Field 
+                            name="ordered_date"
+                            label="Data"
+                            textField={{fullWidth:true}}
+                            component={DateFieldNative}
                         />
                     </Grid>
                     

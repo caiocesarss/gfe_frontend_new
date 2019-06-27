@@ -11,8 +11,10 @@ import  IconButton from '@material-ui/core/IconButton';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import Link from '@material-ui/core/Link';
 import PageHeader from '../template/PageHeader';
-import { defaultClass } from '../../common/Constants';
+import CurrencyFormat from 'react-currency-format';
+import dateFormat from 'dateformat'
 
+import { defaultClass } from '../../common/Constants';
 import { getList } from './SalesOrdersActions';
 
 
@@ -50,83 +52,104 @@ class SalesOrders extends Component {
   
     const columns = [
       {
-        name: "invoice_id",
+        name: "order_id",
         options: {
          display: false
         }
-       },
+      },
       {
-       name: "invoice_number",
-       label: "Num. Doc.",
+        name: "construction_name",
+        label: "Obra",
+        options: {
+         filter: true,
+         sort: true,
+        }
+      },
+      {
+        name: "room_number",
+        label: "Unidade",
+        options: {
+         filter: true,
+         sort: true,
+        }
+      },
+      {
+       name: "ordered_date",
+       label: "Data",
        options: {
         filter: true,
         sort: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return ( 
+            dateFormat(value, "dd/mm/yyyy")
+          );
+        }
        }
       },
       {
-        name: "ammount",
+        name: "amount",
         label: "Valor",
         options: {
-         filter: true,
-         sort: true,
+          filter: true,
+          sort: true,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return ( 
+              <CurrencyFormat
+                  displayType={'text'}
+                  value={Number(value)}
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  prefix={'R$ '} />
+            );
+          }
         }
        },
        {
-        name: "party_id",
-        label: "Credor",
+        name: "cub_amount",
+        label: "Valor em CUB",
+        options: {
+          filter: true,
+          sort: true,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return ( 
+              <CurrencyFormat
+                  displayType={'text'}
+                  value={Number(value)}
+                  thousandSeparator="."
+                  decimalSeparator=","
+              />
+            );
+          }
+        }
+       },
+       {
+        name: "cub_ex_rate",
+        label: "CUB Utilizado",
+        options: {
+          filter: true,
+          sort: true,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return ( 
+              <CurrencyFormat
+                  displayType={'text'}
+                  value={Number(value)}
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  prefix={'R$ '}
+              />
+            );
+          }
+        }
+       },
+       {
+        name: "party",
+        label: "Cliente(s)",
         options: {
          filter: true,
          sort: true,
         }
        },
-       {
-        name: "invoice_data",
-        label: "Dt Vencto",
-        options: {
-         filter: true,
-         sort: true,
-        }
-       },
-       {
-        name: "document_type",
-        label: "Tipo Doc",
-        options: {
-         filter: true,
-         sort: true,
-        }
-       },
-       {
-        name: "payment_status",
-        label: "Status Pgto",
-        options: {
-         filter: true,
-         sort: true,
-        }
-       },
-       {
-        name: "payment_date",
-        label: "Dt Pgto",
-        options: {
-         filter: true,
-         sort: true,
-        }
-       },
-       {
-        name: "major_item",
-        label: "Produtos",
-        options: {
-         filter: true,
-         sort: true,
-        }
-       },
-      {
-       name: "created_at",
-       label: "Data Registro",
-       options: {
-        filter: true,
-        sort: false,
-       }
-      },
+       
       {
         label: "Ações",
         options: {
@@ -134,10 +157,10 @@ class SalesOrders extends Component {
           sort: false,
           empty: true,
           customBodyRender: (value, tableMeta, updateValue) => {
-             const partyId = tableMeta.rowData ? tableMeta.rowData[0] : '';
+             const orderId = tableMeta.rowData ? tableMeta.rowData[0] : '';
 
             return ( 
-                <Link component={RouterLink} to={`/contasClientes/${partyId}`}>
+                <Link component={RouterLink} to={`/vendas/detalhesvenda/${orderId}`}>
                 <IconButton size="small" aria-label="Edit">
                 <OpenInNewIcon />
                 </IconButton>
@@ -184,7 +207,6 @@ class SalesOrders extends Component {
     </main>
     )
   }
-
 }
 
 SalesOrders.propTypes = {
@@ -202,4 +224,3 @@ const Comp = withStyles(styles)(retorno)
 
 export default 
 React.forwardRef((props, ref) => <Comp {...props} forwardedRef={ref} />);
-

@@ -10,6 +10,7 @@ import Payables from "./components/Payables/Payables";
 import SalesOrders from "./components/Sales/SalesOrders";
 import SalesForm from "./components/Sales/SalesForm";
 import SalesFormAddParty from "./components/Sales/SalesFormAddParty";
+import SalesDetails from "./components/Sales/SalesDetails";
 
 
 export default props => {
@@ -28,6 +29,7 @@ export default props => {
     <Route exact path="/payables" component={Payables} />
     <Route exact path="/vendas" component={SalesOrders} />
     <Route  path="/vendas/detalhes" component={SalesForm} />
+    <Route  path="/vendas/detalhesvenda/:order_id" component={SalesDetails} />
     <Route  path="/vendas/incluircliente/:order_id" component={SalesFormAddParty} />
     <Route path="*" component={Home} />
     </Switch>

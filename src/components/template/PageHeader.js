@@ -26,14 +26,14 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-export default props => {
+export default React.forwardRef((props, ref)  => {
     const classes = useStyles();
     return (
   
        
-        <Grid container spacing={1}>
+        <Grid container spacing={1} ref={ref}>
         <CssBaseline />
-        <Grid item xs={8}>
+        <Grid item xs={9}>
         <If test={props.title}>
             <Typography variant="h4" gutterBottom>
             {props.title}
@@ -61,4 +61,4 @@ export default props => {
 
         
     )
-}
+})

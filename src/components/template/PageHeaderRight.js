@@ -24,16 +24,18 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-export default props => {
+export default React.forwardRef((props, ref)  => {
     const classes = useStyles();
     return (
-        <Grid item xs={4}>
+        <Grid item xs={3} ref={ref}>
+          <Grid container direction="row" justify="flex-end">
           <Link component={RouterLink} to={props.linkTo}>
-          <Button variant="contained" color={props.buttonType} className={classes.button}>
+          <Button size="large" variant="contained" color={props.buttonType} className={classes.button}>
           Incluir
           <AddIcon className={classes.rightIcon} />
           </Button>
           </Link>
+          </Grid>
         </Grid>
     )
-}
+})

@@ -24,19 +24,12 @@ class SalesFormAddParty extends Component {
         this.props.dispatch(registerField("SalesFormAddParty", "order_id", "Field"));
     }
 
-
-
     render() {
         const { forwardedRef, ...props } = this.props;
         const { classes, amount, handleSubmit } = this.props;
         const { match: { params } } = this.props;
         const saleData = this.props.saleData;
         this.props.dispatch(change("SalesFormAddParty", "order_id", params.order_id));
-        const curFormat = value => {
-            return <CurrencyFormat value={1192929} displayType={'text'} thousandSeparator={true} prefix={'$'} renderText={value => <div>{value}</div>} />
-        }
-
-       
 
         return (
             <div className={classes.content} ref={forwardedRef}>
@@ -95,7 +88,7 @@ class SalesFormAddParty extends Component {
                             fullWidth 
                             thousandSeparator="."
                             decimalSeparator=","
-                            decimalScale={2}
+                            decimalScale={4}
                         />
                         
                     </Grid>
@@ -103,7 +96,7 @@ class SalesFormAddParty extends Component {
                     <Grid item xs={12} md={12}>
                         <Form role="form" onSubmit={handleSubmit(this.props.createSaleParty)}>
                             
-                            <FieldArray name="accounts" component={AddPartyArray} {...classes} />
+                            <FieldArray name="accounts" component={AddPartyArray} {...classes}/>
                             <Button type="submit">Salvar</Button>
                         </Form>
                     </Grid>
@@ -124,8 +117,12 @@ const mapStateToPropos = state => ({
     saleData: state.salesOrders.saleData,
     amount: selector(state, 'amount')
 });
-const mapDispatchToProps = dispatch =>
-    bindActionCreators({ getList, change, createSaleParty }, dispatch);
+const mapDispatchToProps = (dispatch, ownProps) =>
+    bindActionCreators({ 
+        getList
+        , change
+        , createSaleParty : itm => dispatch(createSaleParty(itm, ownProps))
+    }, dispatch);
 
 SalesFormAddParty = connect(mapStateToPropos, mapDispatchToProps)(SalesFormAddParty)
 

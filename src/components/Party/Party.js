@@ -19,6 +19,7 @@ import { getList } from './PartyActions';
 const styles = defaultClass
 
 class Party extends Component {
+
   componentWillMount() {
     this.props.getList();
   }
@@ -111,7 +112,7 @@ class Party extends Component {
         }
       },
      ];
-     const data = list;
+     //const data = list;
      const options = {
       filterType: 'checkbox',
       responsive: 'stacked',
@@ -131,7 +132,7 @@ class Party extends Component {
       <MuiThemeProvider theme={this.getMuiTheme()}>
       <MUIDataTable
         
-        data={data}
+        data={list}
         columns={columns}
         options={options}
       />

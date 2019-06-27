@@ -45,6 +45,13 @@ export function defaultClass() {
     },
     add_sale_detail: {
       "margin-bottom": "20px"
+    },
+    table_cell_so_detail_h: {
+      "font-size": "1.3em"
+      
+    },
+    text_bold: {
+      "font-weight": "bold"
     }
   }
 }
