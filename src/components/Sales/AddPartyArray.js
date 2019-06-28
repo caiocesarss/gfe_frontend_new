@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Field, change, registerField } from 'redux-form'
+import { Field, change, registerField, FieldArray } from 'redux-form'
 import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
@@ -11,10 +11,9 @@ import { createNumberMask, createTextMask } from 'redux-form-input-masks';
 import { defaultClass } from '../../common/Constants';
 
 import InputSelect from '../../common/InputSelect';
-
-//import { getParties, getPartyAccounts} from '../../common/SelectActions';
 import { getParties, getPartyAccounts } from './SalesOrdersActions';
 import LabelAndInput from '../../common/LabelAndInput';
+import AddFurtherArray from './AddFurtherArray';
 
 const styles = defaultClass
 
@@ -143,11 +142,6 @@ class AddPartyArray extends Component {
             locale: 'pt-BR',
           })
 
-          const validateMonthDays = value =>  'Required'
-
-          const testwarn = value =>
-  'You might be too old for this'
-
           return (
             <Grid item xs={12} md={12} key={index} className={classes.add_sale_detail}>
               <Grid container spacing={1}>
@@ -156,7 +150,7 @@ class AddPartyArray extends Component {
               </Grid>
               </Grid>
               <Grid container spacing={1}>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={2}>
                   <Field 
                     component="input"
                     name={`${member}.entry_cub_amount`}
@@ -179,7 +173,8 @@ class AddPartyArray extends Component {
                     onChange={(e) => this.getPartyAccounts(e.target.value, index)}
                   />
                 </Grid>
-                <Grid item xs={12} md={4}>
+                
+                <Grid item xs={12} md={2}>
                   <Field
                     name={`${member}.party_account_id`}
                     selectField={{ fullWidth: true }}
@@ -193,7 +188,7 @@ class AddPartyArray extends Component {
 
                   />
                 </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1}>
                   <Field 
                       name={`${member}.party_amount`}
                       textField={{fullWidth:true}}
@@ -322,12 +317,8 @@ class AddPartyArray extends Component {
                       
                   />
                 </Grid>
-                <Grid item xs={12} md={1}>
-                  <Fab onClick={() => this.removeOne(index)} size="small" color="secondary" aria-label="Add" >
-                    <DeleteIcon />
-                  </Fab>
                 </Grid>
-              </Grid>
+                
             </Grid>
 
           )
