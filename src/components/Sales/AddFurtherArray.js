@@ -10,6 +10,7 @@ import Fab from '@material-ui/core/Fab';
 import { createNumberMask, createTextMask } from 'redux-form-input-masks';
 import { defaultClass } from '../../common/Constants';
 import LabelAndInput from '../../common/LabelAndInput';
+import Button from '@material-ui/core/Button';
 
 const styles = defaultClass
 
@@ -23,27 +24,32 @@ class AddFurtherArray extends Component {
     this.props.fields.remove(index);
   }
 
-  fillCubAmount(amount, cubExRate, inputChange){
-    //cubExRate = 1792;
-    if (!cubExRate || cubExRate.length < 1) {
-      return false;
+    fillCubAmount(amount, cubExRate, inputChange){
+        //cubExRate = 1792;
+        if (!cubExRate || cubExRate.length < 1) {
+        return false;
+        }
+        const calc = Number(amount.replace(/[^\d,-]/g, ''))/ Number(cubExRate)
+        this.props.change("SalesFormAddParty", inputChange, calc.toFixed(4));
     }
-    const calc = Number(amount.replace(/[^\d,-]/g, ''))/ Number(cubExRate)
-    this.props.change("SalesFormAddParty", inputChange, calc.toFixed(4));
-  }
+
+    //fillAmountRemaining (furtherAmount, parent){
+    //    this.props.change("SalesFormAddParty", `${parent}.amount_remaining`, amount-entryAmount-value);
+    //}
 
   
 
   render() {
-    const { classes, forwardedRef, fields, meta: { error, submitFailed }, ...props } = this.props;
+    const { classes, forwardedRef, fields, parent, meta: { error, submitFailed }, ...props } = this.props;
     const saleData = this.props.saleData;
 
     return (
       <Grid item xs={12} md={12}>
         <br />
-        <Fab onClick={() => this.addNew()} size="small" color="primary" aria-label="Add" >
-          <AddIcon />
-        </Fab>&nbsp;
+        <Button color="default" onClick={() => this.addNew()} size="small"variant="contained" className={classes.button}>
+        <AddIcon /> Incluir Reforço Anual
+        </Button>
+        
        <br /><br />
         {submitFailed && error && <span>{error}</span>}
 
@@ -64,7 +70,7 @@ class AddFurtherArray extends Component {
               <Grid container spacing={1}>
                 
                 <Grid item xs={12} md={11} className={classes.party_title}>
-                    <b>Reforço #{index + 1}:</b>
+                    <b>Reforço Anual #{index + 1}:</b>
                 </Grid>
               </Grid>
               <Grid container spacing={1}>
@@ -77,7 +83,12 @@ class AddFurtherArray extends Component {
                     component={LabelAndInput}
                     label="Valor"
                     inputProps={{ name: `${member}.further_amount` }}
-                    onBlur={data => this.fillCubAmount(data.target.value, saleData.cub_ex_rate, `${member}.further_cub_amount`)}
+                    onBlur={data => {
+                                    this.fillCubAmount(data.target.value, saleData.cub_ex_rate, `${member}.further_cub_amount`)
+                                    
+                                   // this.fillAmountRemaining(data.target.value, parent)
+                                    }
+                            }
                       {...currencyMask}
                   />
                 </Grid>
@@ -97,7 +108,7 @@ class AddFurtherArray extends Component {
                     textField={{fullWidth:true}}
                     component={LabelAndInput}
                     label="Mês Vencimento"
-                    name={`${member}.further_due_month`}
+                    name={`${member}.due_month`}
                 
                     inputProps={{ name: `${member}.further_due_month` }}
                   
@@ -108,7 +119,7 @@ class AddFurtherArray extends Component {
                     textField={{fullWidth:true}}
                     component={LabelAndInput}
                     label="Dia Vencimento"
-                    name={`${member}.further_due_day`}
+                    name={`${member}.due_day`}
                   
                     inputProps={{ name: `${member}.further_due_day` }}
                   

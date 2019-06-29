@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import { Add as AddIcon, Delete as DeleteIcon } from '@material-ui/icons';
 import Fab from '@material-ui/core/Fab';
+import Button from '@material-ui/core/Button';
 import { createNumberMask, createTextMask } from 'redux-form-input-masks';
 import { defaultClass } from '../../common/Constants';
 
@@ -119,9 +120,10 @@ class AddPartyArray extends Component {
     return (
       <Grid item xs={12} md={12}>
         <br />
-        <Fab onClick={() => this.addNew()} size="small" color="primary" aria-label="Add" >
-          <AddIcon />
-        </Fab>&nbsp;
+      <Button onClick={() => this.addNew()} variant="contained" color="default" className={classes.button}>
+        <AddIcon /> Adicionar Cliente
+      </Button>
+        
        <br /><br />
         {submitFailed && error && <span>{error}</span>}
 
@@ -141,6 +143,11 @@ class AddPartyArray extends Component {
             decimalPlaces: 4,
             locale: 'pt-BR',
           })
+          const currencyMaskDec2 = createNumberMask({
+            prefix: 'R$ ',
+            decimalPlaces: 2,
+            locale: 'pt-BR',
+          })
 
           return (
             <Grid item xs={12} md={12} key={index} className={classes.add_sale_detail}>
@@ -150,7 +157,7 @@ class AddPartyArray extends Component {
               </Grid>
               </Grid>
               <Grid container spacing={1}>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={3}>
                   <Field 
                     component="input"
                     name={`${member}.entry_cub_amount`}
@@ -174,7 +181,7 @@ class AddPartyArray extends Component {
                   />
                 </Grid>
                 
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={3}>
                   <Field
                     name={`${member}.party_account_id`}
                     selectField={{ fullWidth: true }}
@@ -188,7 +195,7 @@ class AddPartyArray extends Component {
 
                   />
                 </Grid>
-                <Grid item xs={12} md={1}>
+                <Grid item xs={12} md={3}>
                   <Field 
                       name={`${member}.party_amount`}
                       textField={{fullWidth:true}}
@@ -199,7 +206,7 @@ class AddPartyArray extends Component {
                       {...currencyMask}
                   />
                 </Grid>
-                <Grid item xs={12} md={1}>
+                <Grid item xs={12} md={2}>
                   <Field 
                       name={`${member}.cub_amount`}
                       textField={{fullWidth:true}}
@@ -220,11 +227,15 @@ class AddPartyArray extends Component {
                       id={`${member}.entry_amount`}
                       label="Valor Entrada"
                       inputProps={{ name: `${member}.entry_amount` }}
-                      onBlur={data => this.fillEntryCubAmount(data.target.value, saleData.cub_ex_rate, `${member}.entry_cub_amount`)}
+                      onBlur={data => {
+                                        this.fillEntryCubAmount(data.target.value, 1777, `${member}.entry_cub_amount`)
+                                      }
+                              }
                       {...currencyMask}
                   />
                 </Grid>
-                <Grid item xs={12} md={1}>
+                {/*
+                  <Grid item xs={12} md={1}>
                   <Field 
                       name={`${member}.further_total_amount`}
                       id="t1"
@@ -235,7 +246,8 @@ class AddPartyArray extends Component {
                       onBlur={data => this.fillAmountRemaining(data.target.value, saleData.cub_ex_rate, `${member}.entry_amount`, `${member}.party_amount`, `${member}.amount_remaining`, `${member}.further_cub_amount`)}
                       {...currencyMask}
                   />
-                </Grid>
+                  </Grid>
+                */}
                 <Grid item xs={12} md={1}>
                   <Field 
                       name={`${member}.amount_remaining`}
@@ -317,8 +329,28 @@ class AddPartyArray extends Component {
                       
                   />
                 </Grid>
+                <Grid item xs={12} md={1}>
+                  <Field 
+                      name={`${member}.leftover_amount`}
+                      textField={{fullWidth:true}}
+                      component={LabelAndInput}
+                      label="Saldo Residual"
+                      inputProps={{ name: `${member}.leftover_amount` }}
+                      {...currencyMaskDec2}
+                  />
                 </Grid>
-                
+                </Grid>
+                <Grid container spacing={1}>
+                  <Grid item xs={12} md={1}></Grid>
+                  <Grid item xs={12} md={10}>
+                    <FieldArray parent={member} name={`${member}.furthers`} component={AddFurtherArray} {...classes}/>
+                  </Grid>
+                  <Grid item xs={12} md={1}>
+                    <Fab onClick={() => this.removeOne(index)} size="small" color="secondary" aria-label="Add" >
+                      <DeleteIcon />
+                    </Fab>
+                  </Grid>
+                </Grid>
             </Grid>
 
           )

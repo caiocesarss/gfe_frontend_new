@@ -97,7 +97,7 @@ class SalesFormAddParty extends Component {
                         <Form role="form" onSubmit={handleSubmit(this.props.createSaleParty)}>
                             
                             <FieldArray name="accounts" component={AddPartyArray} {...classes}/>
-                            <Button type="submit">Salvar</Button>
+                            <Button variant="contained" color="primary" type="submit">Finalizar</Button>
                         </Form>
                     </Grid>
                 </Grid>
