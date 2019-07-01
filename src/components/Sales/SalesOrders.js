@@ -81,7 +81,8 @@ class SalesOrders extends Component {
         sort: true,
         customBodyRender: (value, tableMeta, updateValue) => {
           return ( 
-            dateFormat(value, "dd/mm/yyyy")
+            value && dateFormat(value, "dd/mm/yyyy")
+            
           );
         }
        }
