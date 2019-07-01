@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import { defaultClass } from '../../common/Constants';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import { reduxForm, Field, formValueSelector, formValues, change, FieldArray } from 'redux-form';
+import { reduxForm, Field, formValueSelector, formValues, change, reset } from 'redux-form';
 import { createNumberMask, createTextMask } from 'redux-form-input-masks';
 import dateFormat from 'dateformat'
 import LabelAndInput from '../../common/LabelAndInput';
@@ -193,7 +193,8 @@ const mapDispatchToProps = (dispatch, ownProps) =>
   bindActionCreators({
       getList, 
       getCustomList, 
-      createNewSale: itm => dispatch(createNewSale(itm, ownProps)), 
+      createNewSale: itm => dispatch(createNewSale(itm, ownProps))
+        , 
       createNewSaleInit,
       change
     }, dispatch);

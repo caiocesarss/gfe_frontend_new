@@ -51,6 +51,7 @@ export async function createNewSaleInit(values){
     const params = {construction_id: values.construction_id}
     const request = await axios.get(`${BASE_URL}/construction/${values.construction_id}`);
     const result = {...values, construction_name: request.data[0].name}
+    
     return {
         type: 'NEW_SALE_CREATED',
         payload: result
@@ -59,11 +60,11 @@ export async function createNewSaleInit(values){
 
 export function createNewSale(values, ownProps) { 
    return async dispatch => {
+       dispatch(saleCreated())
     const request = await axios.post(`${BASE_URL}/salesorders`,values )
         .then(resp => {
-            toastr.success('Sucesso', 'Operação realizada com sucesso')
-            
-            ownProps.history.push(`/vendas/incluircliente/${resp.data[0].order_id}`)
+            toastr.success('Sucesso', 'Operação realizada com sucesso');
+            dispatch(ownProps.history.push(`/vendas/incluircliente/${resp.data[0].order_id}`));
             //dispatch(init())
         })
         .catch (e => {
@@ -80,7 +81,7 @@ export function createSaleParty(values, ownProps){
         .then(resp => {
             toastr.success('Sucesso', 'Operação realizada com sucesso')
           
-            ownProps.history.push('/vendas/detalhesvenda/'+resp.data)
+            dispatch (ownProps.history.push('/vendas/detalhesvenda/'+resp.data))
             //dispatch(init())
         })
         .catch (e => {
@@ -112,4 +113,8 @@ export function init(){
         initialize('SalesForm', INITIAL_VALUES)
     ]
 }
+
+const saleCreated = () => ({
+    type: "SALE_CREATED"
+})
 
