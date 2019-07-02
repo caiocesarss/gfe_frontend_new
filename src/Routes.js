@@ -11,6 +11,7 @@ import SalesOrders from "./components/Sales/SalesOrders";
 import SalesForm from "./components/Sales/SalesForm";
 import SalesFormAddParty from "./components/Sales/SalesFormAddParty";
 import SalesDetails from "./components/Sales/SalesDetails";
+import ConstructionForm from "./components/Construction/ConstructionForm";
 
 
 export default props => {
@@ -22,13 +23,14 @@ export default props => {
         exact
         component={Home}
     />
-    <Route path="/obras" component={Construction} />
+    <Route exact path="/obras" component={Construction} />
     <Route exact path="/clientes" component={Party} />
     <Route path="/contasClientes/:party_id" component={PartyAccount} />
     <Route path="/clientes/detalhes" component={PartyForm} />
     <Route exact path="/payables" component={Payables} />
     <Route exact path="/vendas" component={SalesOrders} />
     <Route  path="/vendas/detalhes" component={SalesForm} />
+    <Route  path="/obras/form" component={ConstructionForm} />
     <Route  path="/vendas/detalhesvenda/:order_id" component={SalesDetails} />
     <Route  path="/vendas/incluircliente/:order_id" component={SalesFormAddParty} />
     <Route path="*" component={Home} />

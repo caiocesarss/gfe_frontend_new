@@ -10,10 +10,10 @@ import Grid from '@material-ui/core/Grid';
 import  IconButton from '@material-ui/core/IconButton';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import Link from '@material-ui/core/Link';
-import PageHeader from '../template/PageHeader';
 import CurrencyFormat from 'react-currency-format';
 import dateFormat from 'dateformat'
 
+import PageHeader from '../template/PageHeader';
 import { defaultClass } from '../../common/Constants';
 import { getList } from './SalesOrdersActions';
 

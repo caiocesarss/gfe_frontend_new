@@ -13,129 +13,121 @@ import LabelAndInput from '../../common/LabelAndInput';
 import InputSelect from '../../common/InputSelect';
 import PageHeader from '../template/PageHeader';
 import { getList, getCustomList} from '../../common/SelectActions';
-import {createNewSale, createNewSaleInit} from './SalesOrdersActions';
+import {createNewConstruction} from './ConstructionActions';
 
 import DateFieldNative from '../../common/DateFieldNative';
 
 const styles = defaultClass
 
-class SalesForm extends Component {
+class ConstructionForm extends Component {
 
     componentWillMount() {
         const { match: { params } } = this.props;
-        this.props.getCustomList('constructions');
         let now = new Date();
         now = dateFormat(now, "yyyy-mm-dd")
-        this.props.dispatch(change("SalesForm", "ordered_date", now));
+        this.props.dispatch(change("ConstructionForm", "start_date", now));
       }
     
-    updateCubAmount(cubValue, amount){
-       console.log(cubValue)
-        let cubStrip = cubValue.replace(/[^\d,-]/g, ''); 
-        cubStrip = Number(cubStrip.replace(",", "."));
-        const cubAmount = amount/cubStrip;
-        if (cubAmount) {
-        this.props.change('cub_amount', cubAmount);
-        }
 
-    }
 
-    createNewSaleInit(data){
+    createConstruction(data){
         
-        this.props.createNewSaleInit(data);
-        this.props.createNewSale(data)
+        this.props.createNewConstruction(data);
+
 
     }
     
     render (){
         const { forwardedRef, ...props } = this.props;
         const { classes, amount, handleSubmit } = this.props;
-        const selectObras = this.props.list;
-      
-        const selectItems = selectObras.map(item => {
-            return ({name: item.name, id: item.construction_id})
-        }) || [];
+
         const currencyMask = createNumberMask({
             prefix: 'R$ ',
             decimalPlaces: 0,
             locale: 'pt-BR',
           })
-        const currencyMaskRsDec = createNumberMask({
-            prefix: 'R$ ',
-            decimalPlaces: 2,
-            locale: 'pt-BR',
-          })
-        const currencyMaskDec = createNumberMask({
+          const currencyMaskDec = createNumberMask({
             prefix: '',
             decimalPlaces: 4,
             locale: 'pt-BR',
           })
         let now = new Date();
         now = dateFormat(now, "yyyy-mm-dd")
+        const selectItems = [
+            { name: 'PRÉ LANÇAMENTO', id: 'PRÉ LANÇAMENTO'},
+            { name: 'INICIADA', id:'INICIADA'}, 
+            { name: 'CONCLUÍDA', id: 'CONCLUÍDA'}
+        ]
   
     return (
         <div className={classes.content} ref={forwardedRef}>
         <PageHeader 
-            title="Vendas" 
-            subtitle="Cadastro de Vendas"
+            title="Obras" 
+            subtitle="Cadastro de Obras"
             linkTo="/"
             buttonType="primary"
              />
         <Grid item xs={12}>
-            <form role="form" onSubmit={handleSubmit(data => this.createNewSaleInit(data))} >
+            <form role="form" onSubmit={handleSubmit(data => this.createConstruction(data))} >
                 <Grid container spacing={1}>
                     <Grid item xs={12} md={3}>
                         <Field 
-                            name="construction_id"
+                            name="name"
+                            textField={{fullWidth:true}}
+                            component={LabelAndInput}
+                            label="Nome" 
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={2}>
+                        <Field 
+                            name="status"
                             selectField={{fullWidth:true}}
                             component={InputSelect}
                             selectItems={selectItems}
-                            label="Obra"
-                            inputProps={{name: 'constructionSelect', id:'selconst'}}
+                            label="Status"
+                            inputProps={{name: 'status', id:'selstatus'}}
                         /> 
+                        
                     </Grid>
-                    <Grid item xs={12} md={2}>
+                    <Grid item xs={12} md={1}>
                         <Field 
-                            name="room_number"
+                            name="progress_value"
                             textField={{fullWidth:true}}
+                            type="number"
                             component={LabelAndInput}
-                            label="Unidade(s)" 
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <Field 
-                            name="amount"
-                            textField={{fullWidth:true}}
-                            component={LabelAndInput}
-                            label="Valor"
-                            {...currencyMask}
+                            label="Progresso (%)"
                         />
                     </Grid>
                     <Grid item xs={12} md={1}>
                         <Field 
-                            name="cub_ex_rate"
+                            name="room_qt"
                             textField={{fullWidth:true}}
                             component={LabelAndInput}
-                            label="CUB utilizado"
-                            {...currencyMaskRsDec}
-                            onBlur={data => this.updateCubAmount(data.target.value, amount)}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={1}>
-                        <Field 
-                            name="cub_amount"
-                            textField={{fullWidth:true}}
-                            component={LabelAndInput}
-                            label="Valor em CUB"
-                            {...currencyMaskDec}
+                            label="Qt Unidades"
                         />
                     </Grid>
                     <Grid item xs={12} md={2}>
                         <Field 
-                            name="ordered_date"
-                            label="Data"
+                            name="start_date"
+                            label="Data Início"
                             textField={{fullWidth:true}}
                             component={DateFieldNative}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={1}>
+                        <Field 
+                            name="lot_qt"
+                            textField={{fullWidth:true}}
+                            component={LabelAndInput}
+                            label="Qt Lotes" 
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={1}>
+                        <Field 
+                            name="tower_qt"
+                            textField={{fullWidth:true}}
+                            component={LabelAndInput}
+                            label="Qt Torres" 
                         />
                     </Grid>
                     
@@ -147,24 +139,7 @@ class SalesForm extends Component {
                     */}
                     
                 </Grid>
-                <Grid container spacing={1}>
-                    <Grid item xs={12} md={6}>
-                        <Field 
-                            name="details"
-                            textField={{fullWidth:true}}
-                            component={LabelAndInput}
-                            label="Detalhes" 
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Field 
-                            name="payment_details"
-                            textField={{fullWidth:true}}
-                            component={LabelAndInput}
-                            label="Detalhes do Pagamento" 
-                        />
-                    </Grid>
-                </Grid>
+                
                 <Grid container spacing={1}>
                     <Grid item xs={12} md={2}>
                        
@@ -184,12 +159,12 @@ class SalesForm extends Component {
     }
 }
 
-SalesForm.propTypes = {
+ConstructionForm.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-SalesForm = reduxForm({form: 'SalesForm', destroyOnUnmount: false})(SalesForm);
-const selector = formValueSelector('SalesForm')
+ConstructionForm = reduxForm({form: 'ConstructionForm', destroyOnUnmount: false})(ConstructionForm);
+const selector = formValueSelector('ConstructionForm')
 
 const mapStateToPropos = state => ({
      list: state.selectInputs.list,
@@ -197,17 +172,13 @@ const mapStateToPropos = state => ({
     });
 const mapDispatchToProps = (dispatch, ownProps) =>
   bindActionCreators({
-      getList, 
-      getCustomList, 
-      createNewSale: itm => dispatch(createNewSale(itm, ownProps))
-        , 
-      createNewSaleInit,
+      createNewConstruction: itm => dispatch(createNewConstruction(itm, ownProps)),
       change
     }, dispatch);
 
- SalesForm = connect(mapStateToPropos, mapDispatchToProps)(SalesForm)
+ ConstructionForm = connect(mapStateToPropos, mapDispatchToProps)(ConstructionForm)
 
-//export default withStyles(styles)(SalesForm)
-const Comp =  withStyles(styles)(SalesForm)
+//export default withStyles(styles)(ConstructionForm)
+const Comp =  withStyles(styles)(ConstructionForm)
 export default 
 React.forwardRef((props, ref) => <Comp {...props} forwardedRef={ref} />);

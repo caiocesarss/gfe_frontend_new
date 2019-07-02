@@ -12,3 +12,11 @@ export function getList() {
         payload: request
     }
 }
+
+export function createNewConstruction(values, ownProps) {
+    const request = axios.post(`${BASE_URL}/construction`, values)
+    return {
+        type: 'NEW_CONSTRUCTION_CREATED',
+        payload: request.data
+    }
+}

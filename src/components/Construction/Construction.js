@@ -8,23 +8,13 @@ import MUIDataTable from "mui-datatables";
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
-
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { getList } from './ConstructionActions';
+import { defaultClass } from '../../common/Constants';
+import PageHeader from '../template/PageHeader';
 
-const styles = {
-  content: {
-    flexGrow: 1,
-    padding: 10
-  },
-  toolbar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    padding: "0 8px",
-    "margin-top": "60px"
-  }
-}
+const styles = defaultClass
 
 class Construction extends Component {
   componentWillMount() {
@@ -52,6 +42,7 @@ class Construction extends Component {
   });
   
   render(){
+    const { forwardedRef, ...props } = this.props;
     const { classes } = this.props;
     const list = this.props.list || [];
   
@@ -70,25 +61,23 @@ class Construction extends Component {
         sort: true,
        }
       },
-      {
-       name: "alias_name",
-       label: "Apelido",
-       options: {
-        filter: true,
-        sort: false,
-       }
-      },
+      
       {
        name: "progress_value",
        label: "Progresso",
        options: {
         filter: true,
         sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <LinearProgress variant="determinate" value={value} />
+          );
+        }
        }
       },
       {
        name: "room_qt",
-       label: "Andares",
+       label: "Unidades",
        options: {
         filter: true,
         sort: false,
@@ -118,9 +107,16 @@ class Construction extends Component {
     return(
       
       <main className={classes.content}>
-      <div className={classes.toolbar}>
+     <PageHeader 
+        title="Obras" 
+        subtitle="Registros"
+        linkTo="/obras/form"
+        buttonType="primary" 
+        showPageHeaderRight={true}
+        />
       
       <Grid item xs={12}>
+     
       <MuiThemeProvider theme={this.getMuiTheme()}>
       <MUIDataTable
         title={"Obras"}
@@ -131,7 +127,7 @@ class Construction extends Component {
       </MuiThemeProvider>
       </Grid>
    
-      </div>
+      
     </main>
     )
   }
@@ -148,5 +144,6 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators({ getList }, dispatch);
 
 const retorno = connect(mapStateToPropos, mapDispatchToProps)(Construction)
-
-export default withStyles(styles)(retorno)
+const Comp = withStyles(styles)(retorno)
+export default 
+React.forwardRef((props, ref) => <Comp {...props} forwardedRef={ref} />);

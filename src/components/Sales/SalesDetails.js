@@ -41,7 +41,7 @@ class SalesDetails extends Component {
                     <TableCell>Valor em CUB: </TableCell><TableCell className={`${classes.table_cell_so_detail_h} ${classes.text_bold}`}>
                                                             <CurrencyFormat
                                                                 displayType={'text'}
-                                                                value={Number(detailsArray && detailsArray[0].cub_amount)}
+                                                                value={Number(detailsArray && detailsArray[0].so_cub_amount)}
                                                                 thousandSeparator="."
                                                                 decimalSeparator=","
                                                                 />
@@ -93,7 +93,7 @@ class SalesDetails extends Component {
                                         <TableCell style={cellDetail(140)} className={classes.text_bold}>
                                             <CurrencyFormat
                                                 displayType={'text'}
-                                                value={Number(item.cub_amount)}
+                                                value={Number(item.detail_cub_amount)}
                                                 thousandSeparator="."
                                                 decimalSeparator=","
                                             />

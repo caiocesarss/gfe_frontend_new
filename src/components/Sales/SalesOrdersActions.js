@@ -64,7 +64,8 @@ export function createNewSale(values, ownProps) {
     const request = await axios.post(`${BASE_URL}/salesorders`,values )
         .then(resp => {
             toastr.success('Sucesso', 'Operação realizada com sucesso');
-            dispatch(ownProps.history.push(`/vendas/incluircliente/${resp.data[0].order_id}`));
+            const id = resp.data[0] || resp.data[0].order_id
+            dispatch(ownProps.history.push(`/vendas/incluircliente/${id}`));
             //dispatch(init())
         })
         .catch (e => {
