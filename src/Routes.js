@@ -5,7 +5,7 @@ import Home from './containers/Home';
 import Construction from "./components/Construction/Construction";
 import Party from "./components/Party/Party";
 import PartyAccount from "./components/Party/PartyAccount";
-import PartyForm from "./components/Form/PartyForm";
+import PartyForm from "./components/Party/PartyForm";
 import Payables from "./components/Payables/Payables";
 import SalesOrders from "./components/Sales/SalesOrders";
 import SalesForm from "./components/Sales/SalesForm";

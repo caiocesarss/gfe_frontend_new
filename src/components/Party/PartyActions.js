@@ -12,3 +12,10 @@ export function getList() {
         payload: request
     }
 }
+
+export async function setParty(values) {
+    return async dispatch => {
+        const request = await axios.post(`${BASE_URL}/party`, values)
+        dispatch(console.log(request.data))
+    }
+}

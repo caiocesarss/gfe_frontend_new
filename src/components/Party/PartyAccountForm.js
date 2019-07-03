@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 import { withStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import { defaultClass } from '../../common/Constants';
@@ -12,6 +14,7 @@ import InputSelect from '../../common/InputSelect';
 //import TextField from '@material-ui/core/TextField';
 
 import PageHeader from '../template/PageHeader';
+import If from '../../common/If';
 
 const styles = defaultClass
 
@@ -23,74 +26,59 @@ label: 'CPF'}
 label: 'CNPJ'}
 ]
 
-class LocationForm extends Component {
+class PartyAccountForm extends Component {
     
     render (){
         const { forwardedRef, ...props } = this.props;
-        const { classes } = this.props;
+        const { classes,  partyType} = this.props;
+
+        const labelDoc1Number = partyType == 'J' ? 'CNPJ' : 'CPF';
+        const labelDoc2Number = partyType == 'J' ? 'I.E.' : 'R.G.';
     return (
         <div className={classes.content} ref={forwardedRef}>
         <PageHeader 
-            smallTitle="Locais" 
-            smallSubtitle="Endereço"
+            smallTitle="Contas de Cliente" 
+            smallSubtitle="Contas e Locais de Clientes"
             linkTo="/"
             buttonType="primary"
-           
              />
         <Grid item xs={12}>
-            <form role="form" >
+            
                 <Grid container spacing={1}>
                     <Grid item xs={12} md={3}>
                         <Field 
-                            name="adress_line"
+                            name="account_alias_name"
                             textField={{fullWidth:true}}
                             component={LabelAndInput}
-                            label="Rua/Logradouro"
+                            label="Nome da Conta"
                         /> 
                     </Grid>
-                    <Grid item xs={12} md={1}>
+                    <Grid item xs={12} md={3}>
                         <Field 
-                            name="number"
+                            name="legal_account_name"
                             textField={{fullWidth:true}}
                             component={LabelAndInput}
-                            label="Número" 
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={2}>
-                        <Field 
-                            name="complement"
-                            textField={{fullWidth:true}}
-                            component={LabelAndInput}
-                            label="Complemento"
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={2}>
-                        <Field 
-                            name="district"
-                            textField={{fullWidth:true}}
-                            component={LabelAndInput}
-                            label="Bairro"
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={1}>
-                        <Field 
-                            name="district"
-                            textField={{fullWidth:true}}
-                            component={LabelAndInput}
-                            label="UF"
+                            label="Razão Social" 
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <Field 
-                            name="district"
+                            name="doc1_value"
                             textField={{fullWidth:true}}
                             component={LabelAndInput}
-                            label="Cidade"
+                            label={`Número ${labelDoc1Number}`}
                         />
                     </Grid>
-                    
+                    <Grid item xs={12} md={3}>
+                        <Field 
+                            name="doc2_value"
+                            textField={{fullWidth:true}}
+                            component={LabelAndInput}
+                            label={`Número ${labelDoc2Number}`}
+                        />
+                    </Grid>
                 </Grid>
-            </form>
+                
         </Grid>
         <Grid item xs={12}>
             
@@ -100,14 +88,19 @@ class LocationForm extends Component {
     }
 }
 
-LocationForm.propTypes = {
+PartyAccountForm.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-LocationForm = reduxForm({form: 'LocationForm', destroyOnUnmount: false})(LocationForm);
+const selector = formValueSelector('partyForm')
+const mapStateToPropos = state => ({
+    partyType: selector(state, 'type')
+});
 
+
+PartyAccountForm = connect(mapStateToPropos, null)(PartyAccountForm)
   
-//export default withStyles(styles)(LocationForm)
-const Comp =  withStyles(styles)(LocationForm)
+//export default withStyles(styles)(PartyAccountForm)
+const Comp =  withStyles(styles)(PartyAccountForm)
 export default 
 React.forwardRef((props, ref) => <Comp {...props} forwardedRef={ref} />);

@@ -30,7 +30,7 @@ class SalesForm extends Component {
       }
     
     updateCubAmount(cubValue, amount){
-       console.log(cubValue)
+       
         let cubStrip = cubValue.replace(/[^\d,-]/g, ''); 
         cubStrip = Number(cubStrip.replace(",", "."));
         const cubAmount = amount/cubStrip;

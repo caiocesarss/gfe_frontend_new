@@ -69,13 +69,7 @@ class Party extends Component {
        options: {
         filter: true,
         sort: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-            
-            const tipo = value === '1' ? "F" : "J";
-            return (
-                tipo
-            );
-        }    
+           
        },
       },
       {
