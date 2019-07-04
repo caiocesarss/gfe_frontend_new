@@ -34,16 +34,18 @@ class PartyAccountForm extends Component {
 
         const labelDoc1Number = partyType == 'J' ? 'CNPJ' : 'CPF';
         const labelDoc2Number = partyType == 'J' ? 'I.E.' : 'R.G.';
+
+        const header = val => {
+            return {
+                marginTop: `${val}px`
+            }
+        } 
+
     return (
-        <div className={classes.content} ref={forwardedRef}>
-        <PageHeader 
-            smallTitle="Contas de Cliente" 
-            smallSubtitle="Contas e Locais de Clientes"
-            linkTo="/"
-            buttonType="primary"
-             />
+        <div style={header(10)} className={classes.content} ref={forwardedRef}>
+        <h4>Conta</h4>
         <Grid item xs={12}>
-            
+
                 <Grid container spacing={1}>
                     <Grid item xs={12} md={3}>
                         <Field 

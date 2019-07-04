@@ -13,6 +13,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { getList } from './ConstructionActions';
 import { defaultClass } from '../../common/Constants';
 import PageHeader from '../template/PageHeader';
+import { tableOptions} from '../../env';
 
 const styles = defaultClass
 
@@ -100,10 +101,7 @@ class Construction extends Component {
       },
      ];
      const data = list;
-     const options = {
-      filterType: 'checkbox',
-      responsive: 'stacked',
-    };
+
     return(
       
       <main className={classes.content}>
@@ -122,7 +120,7 @@ class Construction extends Component {
         title={"Obras"}
         data={data}
         columns={columns}
-        options={options}
+        options={tableOptions}
       />
       </MuiThemeProvider>
       </Grid>

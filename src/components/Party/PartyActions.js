@@ -1,9 +1,8 @@
 import axios from 'axios'
+import { toastr } from 'react-redux-toastr';
+import { reset } from 'redux-form';
 import { BASE_URL } from '../../env';
 
-const INITIAL_VALUES = {
-list: []
-}
 
 export function getList() {
     const request = axios.get(`${BASE_URL}/party`)
@@ -13,9 +12,29 @@ export function getList() {
     }
 }
 
-export async function setParty(values) {
+export async function setParty(values, ownProps) {
     return async dispatch => {
         const request = await axios.post(`${BASE_URL}/party`, values)
-        dispatch(console.log(request.data))
+        const partyId = request.data.party_id
+        toastr.success('Sucesso', 'Operação realizada com sucesso');
+        //dispatch(ownProps.history.push(`/contasClientes/${partyId}`));
+        return { type: 'PARTY_SAVED', payload: partyId }
     }
+}
+
+export async function setPartyAccount(values) {
+    return async dispatch => {
+        const request = await axios.post(`${BASE_URL}/party/setaccount`, values)
+        return { type: 'PARTY_ACCOUNT_ADDED', payload: request.data }
+    }
+}
+
+export async function getPartyById(id) {
+    const request = await axios.get(`${BASE_URL}/party/${id}`)
+    return { type: 'PARTY_BY_ID_FETCHED', payload: request.data[0] }
+
+}
+
+export function initPartyForm() {
+    return dispatch => dispatch(reset('partyForm'));
 }

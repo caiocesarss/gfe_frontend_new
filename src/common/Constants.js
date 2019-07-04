@@ -23,6 +23,7 @@ export function defaultPageStyle () {
 
 
 export function defaultClass() {
+
   return {
     content: {
       flexGrow: 1,

@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import { defaultClass } from '../../common/Constants';
 import PropTypes from 'prop-types';
-import { reduxForm, Field, formValueSelector } from 'redux-form';
+import { reduxForm, Field, formValueSelector, change } from 'redux-form';
 import Button from '@material-ui/core/Button';
 
 import LabelAndInput from '../../common/LabelAndInput';
@@ -13,7 +13,7 @@ import InputSelect from '../../common/InputSelect';
 import PageHeader from '../template/PageHeader';
 import PartyAccountForm from './PartyAccountForm';
 import LocationForm from '../Location/LocationForm';
-import { setParty, initPartyForm } from './PartyActions';
+import { setPartyAccount, getPartyById } from './PartyActions';
 
 const styles = defaultClass
 
@@ -22,47 +22,36 @@ const selectItems = [
     { name: 'Pessoa Jurídica', id: 'J' }
 ]
 
-class Partyform extends Component {
-    componentWillMount(){
-        this.props.initPartyForm()
+class PartyAccountPreForm extends Component {
+    componentDidMount(){
+        const { match: { params } } = this.props;
+        this.props.getPartyById(params.party_id);
+        this.props.dispatch(change("PartyAccountForm", "party_id", params.party_id));
     }
     
     render() {
         const { forwardedRef, ...props } = this.props;
-        const { classes, handleSubmit } = this.props;
+        const { match: { params } } = this.props;
+        const { classes, handleSubmit, partyById } = this.props;
+
         return (
             <div className={classes.content}>
                 <PageHeader
-                    title="Clientes"
-                    subtitle="Cadastro de Clientes"
-                    linkTo="/clientes/detalhes"
-                    buttonType="primary"
+                    title="Contas de Cliente"
+                    subtitle={`Cadastro de Contas do Cliente ${partyById.name}`}
                 />
 
                 <Grid item xs={12}>
                     <form role="form" onSubmit={handleSubmit(async data => {
-                                                                        const result = await this.props.setParty(data)
-                                                                        
-                                                                        this.props.history.push(`/contasClientes/${result.payload}`);
+                                                                        const result = await this.props.setPartyAccount(data)
+                                                                        this.props.history.push(`/contasClientes/${result.payload.party_id}`);
                                                                     })
                                                 }>
-                        <Grid container spacing={1}>
-                            <Grid item xs={6} md={3}>
-                                <Field name="name"
-                                    textField={{ fullWidth: true }}
-                                    component={LabelAndInput}
-                                    label="Nome" />
-                            </Grid>
-
-                            <Grid item xs={6} md={2}>
-                                <Field name="type"
-                                    component={InputSelect}
-                                    selectField={{ fullWidth: true }}
-                                    label="Tipo"
-                                    inputProps={{ name: 'constructionSelect', id: 'selconst' }}
-                                    selectItems={selectItems} />
-                            </Grid>
-                        </Grid>
+                        <Field 
+                            component="input"
+                            name="party_id"
+                            type="hidden"
+                        />
                         <Grid container spacing={1}>
                             <Grid item xs={12} md={12}>
                                 <PartyAccountForm />
@@ -87,22 +76,19 @@ class Partyform extends Component {
     }
 }
 
-Partyform.propTypes = {
+PartyAccountPreForm.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-Partyform = reduxForm({ form: 'partyForm', destroyOnUnmount: false })(Partyform);
+PartyAccountPreForm = reduxForm({ form: 'PartyAccountForm', destroyOnUnmount: false })(PartyAccountPreForm);
 const mapStateToPropos = state => ({
-    newPartyId: state.party.newPartyId
+    partyById: state.party.partyById
 });
-const mapDispatchToProps = (dispatch, ownProps) =>
-    bindActionCreators({
-        setParty: itm => dispatch(setParty(itm, ownProps)),
-        initPartyForm
-    }, dispatch);
+const mapDispatchToProps = (dispatch) =>
+    bindActionCreators({ getPartyById, setPartyAccount, change }, dispatch);
 
-Partyform = connect(mapStateToPropos, mapDispatchToProps)(Partyform)
+PartyAccountPreForm = connect(mapStateToPropos, mapDispatchToProps)(PartyAccountPreForm)
 
-const Comp = withStyles(styles)(Partyform)
+const Comp = withStyles(styles)(PartyAccountPreForm)
 export default
     React.forwardRef((props, ref) => <Comp {...props} forwardedRef={ref} />);

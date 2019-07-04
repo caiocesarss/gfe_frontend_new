@@ -10,11 +10,11 @@ import Grid from '@material-ui/core/Grid';
 import  IconButton from '@material-ui/core/IconButton';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import Link from '@material-ui/core/Link';
+
 import PageHeader from '../template/PageHeader';
 import { defaultClass } from '../../common/Constants';
-
-
 import { getList } from './PartyActions';
+import { tableOptions} from '../../env';
 
 const styles = defaultClass
 
@@ -45,6 +45,7 @@ class Party extends Component {
   });
   
   render(){
+    const { forwardedRef, ...props } = this.props;
     const { classes } = this.props;
     const list = this.props.list || [];
   
@@ -95,22 +96,14 @@ class Party extends Component {
                 <OpenInNewIcon />
                 </IconButton>
                 </Link>
-              /*<IconButton size="small" aria-label="Edit" onClick={() => {
-                        window.alert(`Clicked "Edit" for row ${tableMeta.rowData[0]}`)
-                    }
-                }>
-              <OpenInNewIcon />
-                </IconButton>*/
             );
           }
         }
       },
      ];
-     //const data = list;
-     const options = {
-      filterType: 'checkbox',
-      responsive: 'stacked',
-    };
+
+
+    
     return(
       
       <main className={classes.content}>
@@ -128,7 +121,7 @@ class Party extends Component {
         
         data={list}
         columns={columns}
-        options={options}
+        options={tableOptions}
       />
       </MuiThemeProvider>
       </Grid>
@@ -149,6 +142,8 @@ const mapStateToPropos = state => ({ list: state.party.list });
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ getList}, dispatch);
 
-const retorno = connect(mapStateToPropos, mapDispatchToProps)(Party)
+Party = connect(mapStateToPropos, mapDispatchToProps)(Party)
 
-export default withStyles(styles)(retorno)
+const Comp =  withStyles(styles)(Party)
+export default 
+React.forwardRef((props, ref) => <Comp {...props} forwardedRef={ref} />);

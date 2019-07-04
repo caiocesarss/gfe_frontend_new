@@ -45,17 +45,17 @@ class LocationForm extends Component {
         const selectCity = cityData.map(item => {
             return ({name: item.name, id:item.city_id})
         })
-        return (
-            <div className={classes.content} ref={forwardedRef}>
-                <PageHeader
-                    smallTitle="Locais"
-                    smallSubtitle="Endereço"
-                    linkTo="/"
-                    buttonType="primary"
 
-                />
+        const header = val => {
+            return {
+                marginTop: `${val}px`
+            }
+        } 
+
+        return (
+            <div style={header(10)} className={classes.content} ref={forwardedRef}>
+                <h4>Local</h4>
                 <Grid item xs={12}>
-                    
                         <Grid container spacing={1}>
                             <Grid item xs={12} md={3}>
                                 <Field

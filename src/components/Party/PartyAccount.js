@@ -9,22 +9,11 @@ import Grid from '@material-ui/core/Grid';
 import  IconButton from '@material-ui/core/IconButton';
 import { Edit as EditIcon} from '@material-ui/icons';
 
-
+import PageHeader from '../template/PageHeader';
 import { getList } from './PartyAccountActions';
+import { defaultClass } from '../../common/Constants';
 
-const styles = {
-  content: {
-    flexGrow: 1,
-    padding: 10
-  },
-  toolbar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    padding: "0 8px",
-    "margin-top": "60px"
-  }
-}
+const styles = defaultClass
 
 class PartyAccount extends Component {
 
@@ -55,6 +44,7 @@ class PartyAccount extends Component {
   });
   
   render(){
+    const { forwardedRef, ...props } = this.props;
     const { classes } = this.props;
     const list = this.props.list || [];
   
@@ -132,10 +122,18 @@ class PartyAccount extends Component {
       filterType: 'checkbox',
       responsive: 'stacked',
     };
+    const { match: { params } } = this.props;
+    
     return(
       
       <main className={classes.content}>
-      <div className={classes.toolbar}>
+      <PageHeader 
+        title="Contas de Cliente" 
+        subtitle="Cadastro de Contas de Cliente"
+        linkTo={`/contasClientes/${params.party_id}/detalhes`}
+        buttonType="primary" 
+        showPageHeaderRight={true}
+        />
       
       <Grid item xs={12}>
       <MuiThemeProvider theme={this.getMuiTheme()}>
@@ -148,7 +146,7 @@ class PartyAccount extends Component {
       </MuiThemeProvider>
       </Grid>
    
-      </div>
+      
     </main>
     )
   }
@@ -164,6 +162,8 @@ const mapStateToPropos = state => ({ list: state.partyAccount.list });
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ getList }, dispatch);
 
-const retorno = connect(mapStateToPropos, mapDispatchToProps)(PartyAccount)
+  PartyAccount = connect(mapStateToPropos, mapDispatchToProps)(PartyAccount)
 
-export default withStyles(styles)(retorno)
+const Comp =  withStyles(styles)(PartyAccount)
+export default 
+React.forwardRef((props, ref) => <Comp {...props} forwardedRef={ref} />);

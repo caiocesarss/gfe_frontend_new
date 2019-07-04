@@ -16,7 +16,7 @@ import dateFormat from 'dateformat'
 import PageHeader from '../template/PageHeader';
 import { defaultClass } from '../../common/Constants';
 import { getList } from './SalesOrdersActions';
-
+import { tableOptions} from '../../env';
 
 const styles = defaultClass
 
@@ -178,10 +178,7 @@ class SalesOrders extends Component {
       },
      ];
      const data = list;
-     const options = {
-      filterType: 'checkbox',
-      responsive: 'stacked',
-    };
+
     return(
       
       <main className={classes.content}>
@@ -199,7 +196,7 @@ class SalesOrders extends Component {
         
         data={data}
         columns={columns}
-        options={options}
+        options={tableOptions}
       />
       </MuiThemeProvider>
       </Grid>
