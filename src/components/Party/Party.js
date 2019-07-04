@@ -13,7 +13,7 @@ import Link from '@material-ui/core/Link';
 
 import PageHeader from '../template/PageHeader';
 import { defaultClass } from '../../common/Constants';
-import { getList } from './PartyActions';
+import { getList, deleteParty } from './PartyActions';
 import { tableOptions} from '../../env';
 
 const styles = defaultClass
@@ -24,16 +24,23 @@ class Party extends Component {
     this.props.getList();
   }
 
+  rowDelete(selectedRows) {
+    const list = this.props.list
+    selectedRows.data.map(val => {
+      const dataIndex = val.dataIndex;
+      console.log(list[dataIndex].party_id);
+      this.props.deleteParty(list[dataIndex].party_id);
+    })
+  }
+
   getMuiTheme = () => createMuiTheme({
     overrides: {
       MUIDataTable: {
         root: {
           backgroundColor: "#FF000",
-          
         },
         paper: {
           boxShadow: "none",
-          
         }
       },
       MUIDataTableBodyCell: {
@@ -91,11 +98,18 @@ class Party extends Component {
              const partyId = tableMeta.rowData ? tableMeta.rowData[0] : '';
 
             return ( 
-                <Link component={RouterLink} to={`/contasClientes/${partyId}`}>
-                <IconButton size="small" aria-label="Edit">
-                <OpenInNewIcon />
-                </IconButton>
-                </Link>
+                <div>
+                  <Link component={RouterLink} to={`/contasClientes/${partyId}`}>
+                    <IconButton size="small" aria-label="Edit">
+                      <OpenInNewIcon />
+                    </IconButton>
+                  </Link>
+                  <Link component={RouterLink} to={`/contasClientes/${partyId}`}>
+                    <IconButton size="small" aria-label="Edit">
+                      <OpenInNewIcon />
+                    </IconButton>
+                  </Link>
+                </div>
             );
           }
         }
@@ -118,10 +132,9 @@ class Party extends Component {
       <Grid item xs={12}>
       <MuiThemeProvider theme={this.getMuiTheme()}>
       <MUIDataTable
-        
         data={list}
         columns={columns}
-        options={tableOptions}
+        options={{...tableOptions, onRowsDelete: data => this.rowDelete(data)}}
       />
       </MuiThemeProvider>
       </Grid>
@@ -140,7 +153,7 @@ Party.propTypes = {
 const mapStateToPropos = state => ({ list: state.party.list });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getList}, dispatch);
+  bindActionCreators({ getList, deleteParty}, dispatch);
 
 Party = connect(mapStateToPropos, mapDispatchToProps)(Party)
 
