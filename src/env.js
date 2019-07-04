@@ -1,5 +1,5 @@
-export const BASE_URL = 'http://finexbackend.herokuapp.com/api';
-/* finexbackend.herokuapp.com/api */
+export const BASE_URL = 'https://finexbackend.herokuapp.com/api';
+/* https://finexbackend.herokuapp.com/api */
 
 export const tableOptions = {
     filterType: 'checkbox',
