@@ -35,6 +35,11 @@ export async function getPartyById(id) {
 
 }
 
+export async function deleteParty(id){
+    const request = await axios.delete(`${BASE_URL}/party/${id}`)
+    return { type: 'PARTY_DELETED', payload: request.data[0] }
+}
+
 export function initPartyForm() {
     return dispatch => dispatch(reset('partyForm'));
 }
