@@ -104,7 +104,7 @@ class Party extends Component {
                       <OpenInNewIcon />
                     </IconButton>
                   </Link>
-                  <Link component={RouterLink} to={`/contasClientes/${partyId}`}>
+                  <Link component={RouterLink} to={`/clientes/detalhes/${partyId}`}>
                     <IconButton size="small" aria-label="Edit">
                       <OpenInNewIcon />
                     </IconButton>
@@ -125,7 +125,7 @@ class Party extends Component {
       <PageHeader 
         title="Clientes" 
         subtitle="Cadastro de Clientes"
-        linkTo="/clientes/detalhes"
+        linkTo="/clientes/incluir"
         buttonType="primary" 
         showPageHeaderRight={true}
         />
