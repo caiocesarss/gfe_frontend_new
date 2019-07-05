@@ -9,26 +9,44 @@ import MUIDataTable from "mui-datatables";
 import Grid from '@material-ui/core/Grid';
 import  IconButton from '@material-ui/core/IconButton';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import EditIcon from '@material-ui/icons/Edit';
 import Link from '@material-ui/core/Link';
+import dateFormat from 'dateformat'
 
 import PageHeader from '../template/PageHeader';
 import { defaultClass } from '../../common/Constants';
 import { getList, deleteParty } from './PartyActions';
 import { tableOptions} from '../../env';
+import Dialog from '../../common/Dialog';
 
 const styles = defaultClass
 
 class Party extends Component {
+  state = {
+    openDialog: false,
+    selectedRows: {}
+  }
 
   componentWillMount() {
+    
     this.props.getList();
   }
 
   rowDelete(selectedRows) {
+    this.setState({selectedRows:selectedRows})
+    this.setState({openDialog: true})
+  }
+
+  handleCloseDialog   = () => {
+    this.setState({openDialog: false})
+  }
+
+  handleDialogAccept = () => {
+    this.setState({openDialog: false})
+    const selectedRows = this.state.selectedRows;
     const list = this.props.list
     selectedRows.data.map(val => {
       const dataIndex = val.dataIndex;
-      console.log(list[dataIndex].party_id);
       this.props.deleteParty(list[dataIndex].party_id);
     })
   }
@@ -50,12 +68,16 @@ class Party extends Component {
       }
     }
   });
+
+  
   
   render(){
     const { forwardedRef, ...props } = this.props;
     const { classes } = this.props;
+    const {openDialog, acceptDialog} = this.state;
     const list = this.props.list || [];
-  
+    
+    
     const columns = [
       {
         name: "party_id",
@@ -86,6 +108,12 @@ class Party extends Component {
        options: {
         filter: true,
         sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return ( 
+            value && dateFormat(value, "dd/mm/yyyy")
+            
+          );
+        }
        }
       },
       {
@@ -99,14 +127,16 @@ class Party extends Component {
 
             return ( 
                 <div>
-                  <Link component={RouterLink} to={`/contasClientes/${partyId}`}>
-                    <IconButton size="small" aria-label="Edit">
+                 
+                 <Link component={RouterLink} to={`/contasClientes/${partyId}`}>
+                    <IconButton size="small" aria-label="Edit" >
+                      
                       <OpenInNewIcon />
                     </IconButton>
-                  </Link>
+                    </Link>
                   <Link component={RouterLink} to={`/clientes/detalhes/${partyId}`}>
                     <IconButton size="small" aria-label="Edit">
-                      <OpenInNewIcon />
+                      <EditIcon />
                     </IconButton>
                   </Link>
                 </div>
@@ -129,6 +159,7 @@ class Party extends Component {
         buttonType="primary" 
         showPageHeaderRight={true}
         />
+        <Dialog title="Excluir Registro" text="Tem certeza que deseja excluir este cliente?" open={openDialog} handleClose={this.handleCloseDialog} handleDialogAccept={this.handleDialogAccept}/>
       <Grid item xs={12}>
       <MuiThemeProvider theme={this.getMuiTheme()}>
       <MUIDataTable
