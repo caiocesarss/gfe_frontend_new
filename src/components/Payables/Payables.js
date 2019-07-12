@@ -1,26 +1,53 @@
-import React, {Component} from 'react';
-import { Link as RouterLink} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
-import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 import MUIDataTable from "mui-datatables";
 import Grid from '@material-ui/core/Grid';
-import  IconButton from '@material-ui/core/IconButton';
+import IconButton from '@material-ui/core/IconButton';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import Link from '@material-ui/core/Link';
+import EditIcon from '@material-ui/icons/Edit';
+import CurrencyFormat from 'react-currency-format';
+import dateFormat from 'dateformat'
+
 import PageHeader from '../template/PageHeader';
 import { defaultClass } from '../../common/Constants';
-
-
 import { getList } from './PayablesActions';
+import { tableOptions} from '../../env';
+import Dialog from '../../common/Dialog';
 
 const styles = defaultClass
 
 class Payables extends Component {
+  state = {
+    openDialog: false,
+    selectedRows: {}
+  }
   componentWillMount() {
     this.props.getList();
+  }
+
+  rowDelete(selectedRows) {
+    this.setState({selectedRows:selectedRows})
+    this.setState({openDialog: true})
+  }
+
+  handleCloseDialog   = () => {
+    this.setState({openDialog: false})
+  }
+
+  handleDialogAccept = () => {
+    this.setState({openDialog: false})
+    const selectedRows = this.state.selectedRows;
+    const list = this.props.list
+    selectedRows.data.map(val => {
+      const dataIndex = val.dataIndex;
+      //this.props.deleteParty(list[dataIndex].party_id);
+    })
   }
 
   getMuiTheme = () => createMuiTheme({
@@ -28,11 +55,11 @@ class Payables extends Component {
       MUIDataTable: {
         root: {
           backgroundColor: "#FF000",
-          
+
         },
         paper: {
           boxShadow: "none",
-          
+
         }
       },
       MUIDataTableBodyCell: {
@@ -42,89 +69,132 @@ class Payables extends Component {
       }
     }
   });
-  
-  render(){
+
+  render() {
     const { classes } = this.props;
-    const list = this.props.list || [];
-  
+    const {openDialog } = this.state;
+
     const columns = [
       {
         name: "invoice_id",
         options: {
-         display: false
+          display: false
         }
-       },
-      {
-       name: "invoice_number",
-       label: "Num. Doc.",
-       options: {
-        filter: true,
-        sort: true,
-       }
       },
       {
-        name: "ammount",
+        name: "invoice_number",
+        label: "Num. Doc.",
+        options: {
+          filter: true,
+          sort: true,
+        }
+      },
+      {
+        name: "amount",
         label: "Valor",
         options: {
-         filter: true,
-         sort: true,
+          filter: true,
+          sort: true,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return ( 
+              <CurrencyFormat
+                  displayType={'text'}
+                  value={Number(value)}
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  decimalScale={2}
+                  fixedDecimalScale={true}
+                  prefix={'R$ '} />
+            );
+          }
         }
-       },
-       {
-        name: "party_id",
+      },
+      {
+        name: "city_name",
+        options: {
+          display: false
+        }
+      },
+      {
+        name: "uf",
+        options: {
+          display: false
+        }
+      },
+      {
+        name: "party_name",
         label: "Credor",
         options: {
-         filter: true,
-         sort: true,
+          filter: true,
+          sort: true,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            const text = tableMeta.rowData ? `${value} - ${tableMeta.rowData[3]} - ${tableMeta.rowData[4]}` : '';
+            return text;
+          }
         }
-       },
-       {
-        name: "invoice_data",
-        label: "Dt Vencto",
+      },
+      {
+        name: "invoice_date",
+        label: "Dt Emissão",
         options: {
-         filter: true,
-         sort: true,
+          filter: true,
+          sort: true,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return ( 
+              value && dateFormat(value, "dd/mm/yyyy")
+              
+            );
+          }
         }
-       },
-       {
+      },
+      {
+        name: "due_date",
+        label: "Dt Vencto.",
+        options: {
+          filter: true,
+          sort: true,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return ( 
+              value && dateFormat(value, "dd/mm/yyyy")
+              
+            );
+          }
+        }
+      },
+      {
         name: "document_type",
         label: "Tipo Doc",
         options: {
-         filter: true,
-         sort: true,
+          filter: true,
+          sort: true,
         }
-       },
-       {
+      },
+      {
         name: "payment_status",
         label: "Status Pgto",
         options: {
-         filter: true,
-         sort: true,
+          filter: true,
+          sort: true,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return value === null ? 'EM ABERTO' : 'PAGO';
+          }
         }
-       },
-       {
+      },
+      {
         name: "payment_date",
         label: "Dt Pgto",
         options: {
-         filter: true,
-         sort: true,
+          filter: true,
+          sort: true,
         }
-       },
-       {
+      },
+      {
         name: "major_item",
         label: "Produtos",
         options: {
-         filter: true,
-         sort: true,
+          filter: true,
+          sort: true,
         }
-       },
-      {
-       name: "created_at",
-       label: "Data Registro",
-       options: {
-        filter: true,
-        sort: false,
-       }
       },
       {
         label: "Ações",
@@ -133,54 +203,46 @@ class Payables extends Component {
           sort: false,
           empty: true,
           customBodyRender: (value, tableMeta, updateValue) => {
-             const partyId = tableMeta.rowData ? tableMeta.rowData[0] : '';
+            const invoiceId = tableMeta.rowData ? tableMeta.rowData[0] : '';
 
-            return ( 
-                <Link component={RouterLink} to={`/contasClientes/${partyId}`}>
-                <IconButton size="small" aria-label="Edit">
-                <OpenInNewIcon />
-                </IconButton>
-                </Link>
-              /*<IconButton size="small" aria-label="Edit" onClick={() => {
-                        window.alert(`Clicked "Edit" for row ${tableMeta.rowData[0]}`)
-                    }
-                }>
-              <OpenInNewIcon />
-                </IconButton>*/
+            return (
+              <Link component={RouterLink} to={`/payables/detalhes/${invoiceId}`}>
+                    <IconButton size="small" aria-label="Edit">
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
             );
           }
         }
       },
-     ];
-     const data = list;
-     const options = {
-      filterType: 'checkbox',
-      responsive: 'stacked',
-    };
-    return(
-      
+    ];
+    const data = this.props.payablesList || [];
+
+    return (
+
       <main className={classes.content}>
-      
-      <PageHeader 
-        title="Contas a Pagar" 
-        subtitle="Registros"
-        linkTo="/payables"
-        buttonType="primary" 
-        showPageHeaderRight={true}
+
+        <PageHeader
+          title="Contas a Pagar"
+          subtitle="Registros"
+          linkTo="/payables/incluir"
+          buttonType="primary"
+          showPageHeaderRight={true}
         />
-      <Grid item xs={12}>
-      <MuiThemeProvider theme={this.getMuiTheme()}>
-      <MUIDataTable
-        
-        data={data}
-        columns={columns}
-        options={options}
-      />
-      </MuiThemeProvider>
-      </Grid>
-   
-      
-    </main>
+        <Dialog title="Excluir Registro" text="Tem certeza que deseja excluir este registro?" open={openDialog} handleClose={this.handleCloseDialog} handleDialogAccept={this.handleDialogAccept}/>
+        <Grid item xs={12}>
+          <MuiThemeProvider theme={this.getMuiTheme()}>
+            <MUIDataTable
+
+              data={data}
+              columns={columns}
+              options={{...tableOptions, onRowsDelete: data => this.rowDelete(data)}}
+            />
+          </MuiThemeProvider>
+        </Grid>
+
+
+      </main>
     )
   }
 
@@ -190,10 +252,10 @@ Payables.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-const mapStateToPropos = state => ({ list: state.payables.list });
+const mapStateToPropos = state => ({ payablesList: state.payables.payablesList });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getList}, dispatch);
+  bindActionCreators({ getList }, dispatch);
 
 const retorno = connect(mapStateToPropos, mapDispatchToProps)(Payables)
 

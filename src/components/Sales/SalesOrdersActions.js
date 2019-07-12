@@ -23,11 +23,38 @@ export async function getList() {
     }
 }
 
-export async function getSaleDetails(order_id){
+export async   function getSaleDetails(order_id){
+    return async dispatch => {
+        const request =  await  axios.get(`${BASE_URL}/salesorders/details/${order_id}`)
+        dispatch ({
+            type:"SALE_DETAILS_FETCHED",
+            payload:  request
+        } )
+    }
+        const request =  await  axios.get(`${BASE_URL}/salesorders/details/${order_id}`)
+            return {
+                type:"SALE_DETAILS_FETCHED",
+                payload:  request
+            } 
+    
+}
+/*
+export async function xgetSaleDetails(order_id){
     const request = await axios.get(`${BASE_URL}/salesorders/details/${order_id}`)
     return {
         type: "SALE_DETAILS_FETCHED", 
         payload: request
+    }
+}
+*/
+export function getDetailFurthers(detail_id){
+    return async dispatch => { 
+        const request =   axios.get(`${BASE_URL}/salesorders/detail/furthers/${detail_id}`)
+        dispatch({
+            type: "SALE_DETAIL_FURTHERS_FETCHED", 
+            payload: request
+          });
+        
     }
 }
 
@@ -69,8 +96,7 @@ export function createNewSale(values, ownProps) {
             //dispatch(init())
         })
         .catch (e => {
-            console.log(e)
-            //e.response.data.errors.forEach(error => toastr.error('Erro', error))
+            e.response.data.errors.forEach(error => toastr.error('Erro', error))
         })
     }
 }
@@ -86,8 +112,7 @@ export function createSaleParty(values, ownProps){
             //dispatch(init())
         })
         .catch (e => {
-            console.log(e)
-            //e.response.data.errors.forEach(error => toastr.error('Erro', error))
+            e.response.data.errors.forEach(error => toastr.error('Erro', error))
         })
     }
 }

@@ -52,7 +52,8 @@ export function defaultClass() {
       
     },
     text_bold: {
-      "font-weight": "bold"
+      "font-weight": "bold",
+      "margin-top": "70px"
     }
   }
 }

@@ -32,8 +32,8 @@ class PartyAccountForm extends Component {
         const { forwardedRef, ...props } = this.props;
         const { classes,  partyType} = this.props;
 
-        const labelDoc1Number = partyType == 'J' ? 'CNPJ' : 'CPF';
-        const labelDoc2Number = partyType == 'J' ? 'I.E.' : 'R.G.';
+        const labelDoc1Number = partyType === 'J' ? 'CNPJ' : 'CPF';
+        const labelDoc2Number = partyType === 'J' ? 'I.E.' : 'R.G.';
 
         const header = val => {
             return {

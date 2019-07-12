@@ -14,6 +14,7 @@ import SalesDetails from "./components/Sales/SalesDetails";
 import ConstructionForm from "./components/Construction/ConstructionForm";
 import PartyAccountPreForm from "./components/Party/PartyAccountPreForm";
 import PartyDetail from './components/Party/PartyDetail';
+import PayablesForm from './components/Payables/PayablesForm';
 
 
 export default props => {
@@ -32,6 +33,8 @@ export default props => {
     <Route path="/contasClientes/:party_id/detalhes" component={PartyAccountPreForm} />
     <Route path="/clientes/incluir" component={PartyForm} />
     <Route exact path="/payables" component={Payables} />
+    <Route exact path="/payables/detalhes/:invoice_id" component={PayablesForm} />
+    <Route exact path="/payables/incluir" component={PayablesForm} />
     <Route exact path="/vendas" component={SalesOrders} />
     <Route  path="/vendas/detalhes" component={SalesForm} />
     <Route  path="/obras/form" component={ConstructionForm} />

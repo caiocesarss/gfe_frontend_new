@@ -23,10 +23,10 @@ export default props => {
                 </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={props.handleClose} color="primary">
+                    <Button variant="contained" onClick={props.handleClose} color="primary" autoFocus>
                         Não
                     </Button>
-                    <Button onClick={props.handleDialogAccept} color="primary" autoFocus>
+                    <Button variant="contained" onClick={props.handleDialogAccept} color="secondary" >
                         Sim
                     </Button>
                 </DialogActions>
