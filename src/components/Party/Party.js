@@ -28,8 +28,10 @@ class Party extends Component {
   }
 
   componentWillMount() {
+    //const { match: { params } } = this.props;
+    //console.log(this.props)
     
-    this.props.getList();
+    this.props.getList(this.props.category);
   }
 
   rowDelete(selectedRows) {
@@ -76,7 +78,7 @@ class Party extends Component {
     const { classes } = this.props;
     const {openDialog, acceptDialog} = this.state;
     const list = this.props.list || [];
-    
+  
     
     const columns = [
       {
@@ -128,13 +130,13 @@ class Party extends Component {
             return ( 
                 <div>
                  
-                 <Link component={RouterLink} to={`/contasClientes/${partyId}`}>
+                 <Link component={RouterLink} to={`/contasPessoa/${partyId}`}>
                     <IconButton size="small" aria-label="Edit" >
                       
                       <OpenInNewIcon />
                     </IconButton>
                     </Link>
-                  <Link component={RouterLink} to={`/clientes/detalhes/${partyId}`}>
+                  <Link component={RouterLink} to={`/pessoa/${this.props.category}/detalhes/${partyId}`}>
                     <IconButton size="small" aria-label="Edit">
                       <EditIcon />
                     </IconButton>
@@ -153,9 +155,9 @@ class Party extends Component {
       <main className={classes.content}>
       
       <PageHeader 
-        title="Clientes" 
-        subtitle="Cadastro de Clientes"
-        linkTo="/clientes/incluir"
+        title={this.props.title}
+        subtitle={this.props.subtitle}
+        linkTo={this.props.linkTo}
         buttonType="primary" 
         showPageHeaderRight={true}
         />

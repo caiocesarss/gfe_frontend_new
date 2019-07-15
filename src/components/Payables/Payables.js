@@ -162,6 +162,14 @@ class Payables extends Component {
         }
       },
       {
+        name: "construction_name",
+        label: "Obra",
+        options: {
+          filter: true,
+          sort: true,
+        }
+      },
+      {
         name: "document_type",
         label: "Tipo Doc",
         options: {
@@ -176,7 +184,7 @@ class Payables extends Component {
           filter: true,
           sort: true,
           customBodyRender: (value, tableMeta, updateValue) => {
-            return value === null ? 'EM ABERTO' : 'PAGO';
+            return value == 1 ? "PAGO" : "EM ABERTO";
           }
         }
       },

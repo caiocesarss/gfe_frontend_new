@@ -13,7 +13,8 @@ import InputSelect from '../../common/InputSelect';
 import PageHeader from '../template/PageHeader';
 import PartyAccountForm from './PartyAccountForm';
 import LocationForm from '../Location/LocationForm';
-import { updateParty, initPartyForm, getPartyById } from './PartyActions';
+import { updateParty, initPartyForm, getPartyById, initializeForm } from './PartyActions';
+import InputSwitch from '../../common/InputSwitch';
 
 const styles = defaultClass
 
@@ -24,28 +25,41 @@ const selectItems = [
 
 class PartyDetail extends Component {
     componentDidMount(){
-        const { match: { params } } = this.props;
-        this.props.getPartyById(params.party_id);
+        //const { match: { params } } = this.props;
+        
+        this.props.initializeForm();
+        this.props.getPartyById(this.props.partyId);
     }
     
     render() {
         const { forwardedRef, ...props } = this.props;
         const { classes, handleSubmit } = this.props;
         const { partyById } = this.props;
+        let switchTypeName = '';
+        let switchTypeLabel = '';
+        if (this.props.category == 'fornecedor'){
+            switchTypeName = 'is_customer';
+            switchTypeLabel = 'Cliente';
+        } else {
+
+            switchTypeName = 'is_vendor';
+            switchTypeLabel = 'Fornecedor';
+        }
      
         return (
             <div className={classes.content}>
                 <PageHeader
-                    title="Clientes"
-                    subtitle="Cadastro de Clientes"
-                    linkTo="/clientes/detalhes"
+                    title={this.props.title}
+                    subtitle={this.props.subtitle}
+                    
                     buttonType="primary"
                 />
 
                 <Grid item xs={12}>
                     <form role="form" onSubmit={handleSubmit(async data => {
                                                                         const result = await this.props.updateParty(data)
-                                                                        this.props.history.push(`/clientes`);
+                                                                        this.props.redirectPage(`/pessoa/${this.props.category}`)
+                                                                        
                                                                     })
                                                 }>
                         <Grid container spacing={1}>
@@ -63,6 +77,12 @@ class PartyDetail extends Component {
                                     label="Tipo"
                                     inputProps={{ name: 'type', id: 'seltype' }}
                                     selectItems={selectItems} />
+                            </Grid>
+                            <Grid item xs={6} md={2}>
+                                <Field name={switchTypeName}
+                                    type="checkbox"
+                                    component={InputSwitch}
+                                    label={switchTypeLabel} />
                             </Grid>
                         </Grid>
                         
@@ -93,7 +113,8 @@ const mapDispatchToProps = (dispatch, ownProps) =>
         updateParty,
         initPartyForm,
         getPartyById,
-        change
+        change,
+        initializeForm
     }, dispatch);
 
 PartyDetail = connect(mapStateToPropos, mapDispatchToProps)(PartyDetail)

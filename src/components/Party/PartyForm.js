@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import { defaultClass } from '../../common/Constants';
 import PropTypes from 'prop-types';
-import { reduxForm, Field, formValueSelector } from 'redux-form';
+import { reduxForm, Field, formValueSelector, change } from 'redux-form';
 import Button from '@material-ui/core/Button';
 
 import LabelAndInput from '../../common/LabelAndInput';
@@ -13,7 +13,8 @@ import InputSelect from '../../common/InputSelect';
 import PageHeader from '../template/PageHeader';
 import PartyAccountForm from './PartyAccountForm';
 import LocationForm from '../Location/LocationForm';
-import { setParty, initPartyForm } from './PartyActions';
+import { setParty, initPartyForm, initializeForm } from './PartyActions';
+import InputSwitch from '../../common/InputSwitch';
 
 const styles = defaultClass
 
@@ -24,30 +25,52 @@ const selectItems = [
 
 class Partyform extends Component {
     componentWillMount(){
-        this.props.initPartyForm()
+        this.props.initPartyForm();
+        this.props.initializeForm();
+        this.props.dispatch(change("partyForm", "is_vendor", this.props.category == 'fornecedor'? 1 : 0));
+        this.props.dispatch(change("partyForm", "is_customer", this.props.category == 'cliente'? 1 : 0));
     }
     
     render() {
         const { forwardedRef, ...props } = this.props;
         const { classes, handleSubmit } = this.props;
+        let hiddenTypeName = '';
+        let switchTypeName = '';
+        let switchTypeLabel = '';
+        if (this.props.category == 'fornecedor'){
+            hiddenTypeName = 'is_vendor';
+            switchTypeName = 'is_customer';
+            switchTypeLabel = 'Cliente';
+        } else {
+            hiddenTypeName = 'is_customer';
+            switchTypeName = 'is_vendor';
+            switchTypeLabel = 'Fornecedor';
+        }
+        
         return (
             <div className={classes.content}>
                 <PageHeader
-                    title="Clientes"
-                    subtitle="Cadastro de Clientes"
-                    linkTo="/clientes/detalhes"
+                    title={this.props.title}
+                    subtitle={this.props.subtitle}
+                    
                     buttonType="primary"
                 />
 
                 <Grid item xs={12}>
                     <form role="form" onSubmit={handleSubmit(async data => {
                                                                         const result = await this.props.setParty(data)
+                                                                        this.props.redirectPage(`/contasPessoa/${result.payload}`)
                                                                         
-                                                                        this.props.history.push(`/contasClientes/${result.payload}`);
+                                                                        //this.props.history.push(`/contasPessoa/${result.payload}`);
                                                                     })
                                                 }>
                         <Grid container spacing={1}>
                             <Grid item xs={6} md={3}>
+                                <Field name={hiddenTypeName}
+                                    component="input"
+                                    type="hidden"
+                                     />
+                                
                                 <Field name="name"
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
@@ -61,6 +84,12 @@ class Partyform extends Component {
                                     label="Tipo"
                                     inputProps={{ name: 'constructionSelect', id: 'selconst' }}
                                     selectItems={selectItems} />
+                            </Grid>
+                            <Grid item xs={6} md={2}>
+                                <Field name={switchTypeName}
+                                    type="checkbox"
+                                    component={InputSwitch}
+                                    label={switchTypeLabel} />
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}>
@@ -98,7 +127,9 @@ const mapStateToPropos = state => ({
 const mapDispatchToProps = (dispatch, ownProps) =>
     bindActionCreators({
         setParty: itm => dispatch(setParty(itm, ownProps)),
-        initPartyForm
+        initPartyForm,
+        initializeForm,
+        change
     }, dispatch);
 
 Partyform = connect(mapStateToPropos, mapDispatchToProps)(Partyform)

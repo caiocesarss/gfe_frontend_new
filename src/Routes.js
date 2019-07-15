@@ -15,6 +15,12 @@ import ConstructionForm from "./components/Construction/ConstructionForm";
 import PartyAccountPreForm from "./components/Party/PartyAccountPreForm";
 import PartyDetail from './components/Party/PartyDetail';
 import PayablesForm from './components/Payables/PayablesForm';
+import Vendor from './components/Party/Vendor';
+import Customer from './components/Party/Customer';
+import VendorAdd from './components/Party/VendorAdd';
+import CustomerAdd from './components/Party/CustomerAdd';
+import VendorDetail from './components/Party/VendorDetail';
+import CustomerDetail from './components/Party/CustomerDetail';
 
 
 export default props => {
@@ -27,11 +33,17 @@ export default props => {
         component={Home}
     />
     <Route exact path="/obras" component={Construction} />
-    <Route exact path="/clientes" component={Party} />
+    <Route exact path="/pessoa/cliente" component={Customer} />
+    <Route exact path="/pessoa/fornecedor" component={Vendor}/>
+    <Route exact path="/pessoa/detalhes/:party_id" component={PartyDetail}/>
     <Route exact path="/clientes/detalhes/:party_id" component={PartyDetail} />
-    <Route exact path="/contasClientes/:party_id" component={PartyAccount} />
+    <Route exact path="/pessoa/cliente/detalhes/:party_id" component={CustomerDetail} />
+    <Route exact path="/pessoa/fornecedor/detalhes/:party_id" component={VendorDetail} />
+    <Route exact path="/contasPessoa/:party_id" component={PartyAccount} />
     <Route path="/contasClientes/:party_id/detalhes" component={PartyAccountPreForm} />
-    <Route path="/clientes/incluir" component={PartyForm} />
+    <Route path="/pessoa/clientes/incluir" component={CustomerAdd} />
+    <Route path="/pessoa/fornecedores/incluir" component={VendorAdd} />
+    {/*<Route path="/clientes/incluir" component={PartyForm} /> */}
     <Route exact path="/payables" component={Payables} />
     <Route exact path="/payables/detalhes/:invoice_id" component={PayablesForm} />
     <Route exact path="/payables/incluir" component={PayablesForm} />

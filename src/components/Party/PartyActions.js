@@ -3,13 +3,10 @@ import { toastr } from 'react-redux-toastr';
 import { reset, initialize, change } from 'redux-form';
 import { BASE_URL } from '../../env';
 
-const PARTY_INITIAL_VALUES = {
-    name: 'sss',
-    type: 'F'
-}
+const INITIAL_DATA = {};
 
-export function getList() {
-    const request = axios.get(`${BASE_URL}/party`)
+export function getList(categoria) {
+    const request = axios.get(`${BASE_URL}/party/${categoria}`)
     return {
         type: 'PARTY_FETCHED',
         payload: request
@@ -34,7 +31,7 @@ export async function setPartyAccount(values) {
 }
 
 export async function getPartyById(id) {
-    const request = await axios.get(`${BASE_URL}/party/${id}`)
+    const request = await axios.get(`${BASE_URL}/party/getById/${id}`)
     return dispatch => {
         dispatch(initialize('partyForm', request.data[0]))
         return { type: 'PARTY_BY_ID_FETCHED', payload: request.data[0] }
@@ -49,8 +46,10 @@ export async function updateParty(partyData) {
     }
 }
 
-export function initializeForm(data) {
-    initialize('partyForm', data)
+export function initializeForm(data = INITIAL_DATA){
+    return dispatch => {
+        dispatch(initialize("partyForm", data))
+    }
 }
 
 export async function deleteParty(id) {
@@ -61,3 +60,4 @@ export async function deleteParty(id) {
 export function initPartyForm() {
     return dispatch => dispatch(reset('partyForm'));
 }
+

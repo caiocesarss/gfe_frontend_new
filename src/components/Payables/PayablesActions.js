@@ -1,13 +1,18 @@
 import axios from 'axios'
 import { toastr } from 'react-redux-toastr';
+import { change, initialize } from 'redux-form';
+import dateFormat from 'dateformat'
 
 const BASE_URL = 'http://localhost:3003/api';
 const INITIAL_VALUES = {
     payablesList: [],
     APPartyList: [],
     APPartyAccountsList: [],
-    APFinGroupsList: []
+    APFinGroupsList: [],
+    InvoiceById: []
 }
+
+const INITIAL_DATA = {}
 
 export function getList() {
     const request = axios.get(`${BASE_URL}/payables/invoice`)
@@ -18,15 +23,27 @@ export function getList() {
 }
 
 export function getInvoiceById(invoice_id){
-    
-        const request =  axios.get(`${BASE_URL}/payables/invoice/${invoice_id}`)
-        return {type: 'INVOICE_BY_ID_FETCHED', payload: request}
-    
+        return async  dispatch => {
+            const request = await  axios.get(`${BASE_URL}/payables/invoice/${invoice_id}`)
+            const data = request.data[0];
+            const paymentStatus = data.payment_status == 1 ? true :  false;
+            const dataForm = {...data, 
+                                invoice_date: dateFormat(data.invoice_date, "yyyy-mm-dd"),
+                                due_date: dateFormat(data.due_date, "yyyy-mm-dd"),
+                                payment_status: paymentStatus
+                            }
+            dispatch (getPartyAccounts({party_id: dataForm.party_id}))
+
+            dispatch(initializeForm(dataForm))
+            
+        }  
 }
 
-export async function setInvoice(values, ownProps) {
+export async function setInvoice(values) {
+    const type = values.invoice_id ? 'put' : 'post';
+    values.payment_status = values.payment_status === "0"||values.payment_status === false ? 0 : 1;
     return async dispatch => {
-        const request = await axios.post(`${BASE_URL}/payables/invoice/setinvoice`, values)
+        const request = await axios[type](`${BASE_URL}/payables/invoice/setinvoice`, values)
         toastr.success('Sucesso', 'Operação realizada com sucesso');
         return { type: 'INVOICE_SAVED', payload: request }
     }
@@ -65,5 +82,11 @@ export function getFinGroups(){
     return {
         type: 'AP_GROUPS_FETCHED',
         payload: request
+    }
+}
+
+export function initializeForm(data = INITIAL_DATA){
+    return dispatch => {
+        dispatch(initialize("payablesForm", data))
     }
 }
