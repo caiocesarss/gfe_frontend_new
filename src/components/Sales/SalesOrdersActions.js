@@ -58,6 +58,17 @@ export function getDetailFurthers(detail_id){
     }
 }
 
+export  function getSaleNext(order_id){
+    return async dispatch => { 
+        const request =  await axios.get(`${BASE_URL}/salesorders/salenext/${order_id}`)
+        dispatch({
+            type: "SALE_NEXT_FETCHED", 
+            payload: request
+          });
+        
+    }
+}
+
 export function getParties(params) {
     const request = axios.post(`${BASE_URL}/party/select`, params)
     return {
@@ -75,45 +86,40 @@ export function getPartyAccounts(params) {
 }
 
 export async function createNewSaleInit(values){
-    const params = {construction_id: values.construction_id}
+    return async dispatch => {const params = {construction_id: values.construction_id}
     const request = await axios.get(`${BASE_URL}/construction/${values.construction_id}`);
     const result = {...values, construction_name: request.data[0].name}
     
-    return {
+    dispatch ( {
         type: 'NEW_SALE_CREATED',
         payload: result
     }
+    )
+}
 }
 
 export function createNewSale(values, ownProps) { 
    return async dispatch => {
-       dispatch(saleCreated())
+       
     const request = await axios.post(`${BASE_URL}/salesorders`,values )
-        .then(resp => {
+      
             toastr.success('Sucesso', 'Operação realizada com sucesso');
-            const id = resp.data[0] || resp.data[0].order_id
-            dispatch(ownProps.history.push(`/vendas/incluircliente/${id}`));
+            return  { type: 'SALE_SAVED', payload: request }
+            //const id = resp.data[0] || resp.data[0].order_id
+            //dispatch(ownProps.history.push(`/vendas/incluircliente/${id}`));
             //dispatch(init())
-        })
-        .catch (e => {
-            e.response.data.errors.forEach(error => toastr.error('Erro', error))
-        })
+       
+        
     }
 }
 
+
+
+
 export function createSaleParty(values, ownProps){
     return async dispatch => {
-    
     const request = await axios.post(`${BASE_URL}/salesorders/adddetail`,values )
-        .then(resp => {
-            toastr.success('Sucesso', 'Operação realizada com sucesso')
-          
-            dispatch (ownProps.history.push('/vendas/detalhesvenda/'+resp.data))
-            //dispatch(init())
-        })
-        .catch (e => {
-            e.response.data.errors.forEach(error => toastr.error('Erro', error))
-        })
+        return  { type: 'SALE_PARTY_ADDED' }
     }
 }
 

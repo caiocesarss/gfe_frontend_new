@@ -15,12 +15,12 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, salePartyList: action.payload.data }
     case "SALE_PARTY_ACCOUNTS_FETCHED":
       return { ...state, salePartyAccountList: action.payload.data }
-    case "NEW_SALE_CREATED":
-      return { ...state, saleData: action.payload }
+    case "SALE_NEXT_FETCHED":
+        return { ...state, saleData: action.payload.data }
     case "SALE_DETAILS_FETCHED":
       return { ...state, saleDetails: action.payload.data }
     case "SALE_DETAIL_FURTHERS_FETCHED":
-      return { ...state, saleDetailFurthers: action.payload }
+      return { ...state, saleDetailFurthers: action.payload.data }
     default:
       return state
   }

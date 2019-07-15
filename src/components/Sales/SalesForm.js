@@ -82,7 +82,14 @@ class SalesForm extends Component {
             buttonType="primary"
              />
         <Grid item xs={12}>
-            <form role="form" onSubmit={handleSubmit(data => this.createNewSaleInit(data))} >
+            <form role="form" onSubmit={handleSubmit(async data => {
+                                                        this.createNewSaleInit(data);
+                                                        const result = await this.props.createNewSale(data)
+                                                        
+                                                        this.props.history.push(`/vendas/incluircliente/${result.payload.data[0]}`)
+                                                    }) 
+                                                }>
+
                 <Grid container spacing={1}>
                     <Grid item xs={12} md={3}>
                         <Field 

@@ -60,8 +60,6 @@ class Partyform extends Component {
                     <form role="form" onSubmit={handleSubmit(async data => {
                                                                         const result = await this.props.setParty(data)
                                                                         this.props.redirectPage(`/contasPessoa/${result.payload}`)
-                                                                        
-                                                                        //this.props.history.push(`/contasPessoa/${result.payload}`);
                                                                     })
                                                 }>
                         <Grid container spacing={1}>

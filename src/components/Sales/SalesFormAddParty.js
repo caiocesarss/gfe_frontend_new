@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField';
 
 import { getList } from '../../common/SelectActions';
 import AddPartyArray from './AddPartyArray';
-import { createSaleParty } from './SalesOrdersActions';
+import { createSaleParty, getSaleNext } from './SalesOrdersActions';
 import { Button } from '@material-ui/core';
 
 
@@ -21,14 +21,16 @@ const styles = defaultClass
 
 class SalesFormAddParty extends Component {
     componentDidMount(){
+        const { match: { params } } = this.props;
         this.props.dispatch(registerField("SalesFormAddParty", "order_id", "Field"));
+        this.props.getSaleNext(params.order_id);
     }
 
     render() {
         const { forwardedRef, ...props } = this.props;
-        const { classes, amount, handleSubmit } = this.props;
+        const { classes, amount, handleSubmit, saleData } = this.props;
         const { match: { params } } = this.props;
-        const saleData = this.props.saleData;
+ 
         this.props.dispatch(change("SalesFormAddParty", "order_id", params.order_id));
 
         return (
@@ -42,7 +44,7 @@ class SalesFormAddParty extends Component {
                             fullWidth
                             disabled
                             label="Obra"
-                            defaultValue={saleData.construction_name}
+                            value={saleData.construction_name}
                             className={classes.textField}
                         />
                     </Grid>
@@ -51,7 +53,7 @@ class SalesFormAddParty extends Component {
                             fullWidth
                             disabled
                             label="Unidade"
-                            defaultValue={saleData.room_number}
+                            value={saleData.room_number}
                             className={classes.textField}
                         />
                     </Grid>
@@ -94,8 +96,10 @@ class SalesFormAddParty extends Component {
                     </Grid>
                     
                     <Grid item xs={12} md={12}>
-                        <Form role="form" onSubmit={handleSubmit(this.props.createSaleParty)}>
-                            
+                        <Form role="form" onSubmit={handleSubmit(async data => {
+                                                                     const result = await this.props.createSaleParty(data);
+                                                                     this.props.history.push("/vendas");
+                                                                    })}>
                             <FieldArray name="accounts" component={AddPartyArray} {...classes}/>
                             <Button variant="contained" color="primary" type="submit">Finalizar</Button>
                         </Form>
@@ -122,6 +126,7 @@ const mapDispatchToProps = (dispatch, ownProps) =>
         getList
         , change
         , createSaleParty : itm => dispatch(createSaleParty(itm, ownProps))
+        , getSaleNext
     }, dispatch);
 
 SalesFormAddParty = connect(mapStateToPropos, mapDispatchToProps)(SalesFormAddParty)

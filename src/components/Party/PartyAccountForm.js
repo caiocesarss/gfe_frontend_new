@@ -5,16 +5,9 @@ import { withStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import { defaultClass } from '../../common/Constants';
 import PropTypes from 'prop-types';
-import Box from '@material-ui/core/Box';
-
-import { reduxForm, Field, formValueSelector } from 'redux-form';
-
+import { Field, formValueSelector } from 'redux-form';
+import { createTextMask } from 'redux-form-input-masks';
 import LabelAndInput from '../../common/LabelAndInput';
-import InputSelect from '../../common/InputSelect';
-//import TextField from '@material-ui/core/TextField';
-
-import PageHeader from '../template/PageHeader';
-import If from '../../common/If';
 
 const styles = defaultClass
 
@@ -40,6 +33,12 @@ class PartyAccountForm extends Component {
                 marginTop: `${val}px`
             }
         } 
+        const patternMask = partyType === 'J' ? '99.999.999/9999-99' : '999.999.999-99'
+        const DocMask = createTextMask({
+            pattern: patternMask,
+            stripMask: false,
+            guide: false
+          });
 
     return (
         <div style={header(10)} className={classes.content} ref={forwardedRef}>
@@ -69,6 +68,7 @@ class PartyAccountForm extends Component {
                             textField={{fullWidth:true}}
                             component={LabelAndInput}
                             label={`Número ${labelDoc1Number}`}
+                            {...DocMask}
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>

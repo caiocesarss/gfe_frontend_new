@@ -24,7 +24,7 @@ class AddPartyArray extends Component {
   }
 
   componentWillMount() {
-    this.props.getParties();
+    this.props.getParties({is_customer: 1, is_vendor: 0});
     let tempList = this.state.selectPartyAccounts;
     tempList.push([])
     this.setState({ selectPartyAccounts: tempList });

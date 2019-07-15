@@ -10,6 +10,8 @@ import dateFormat from 'dateformat'
 
 import { defaultClass } from '../../common/Constants';
 import { getSaleDetails, getDetailFurthers } from './SalesOrdersActions';
+import SaleFurthers from './SaleFurthers';
+
 
 const styles = defaultClass;
 
@@ -75,15 +77,11 @@ class SalesDetails extends Component {
                 </TableBody>
                 </Table>
                 {detailsArray && detailsArray.map( item => {
-                    const {getDetailFurthers, saleDetailFurthers} = this.props;
-                    getDetailFurthers(item.detail_id)
-                    if (saleDetailFurthers.length === 0 ){
-                        return false;
-                    }
-                    console.log(saleDetailFurthers)
+                    
                     count++;
                     return (
                         <Paper className={classes.paper} key={item.detail_id}>
+                           
                             <h4>#{count}</h4>
                             <Table className={classes.table}>
                                 <TableBody>
@@ -213,6 +211,7 @@ class SalesDetails extends Component {
                                     </TableRow>
                                 </TableBody>
                             </Table>
+                            <SaleFurthers detailId={item.detail_id} />
                         </Paper>
                         /*
                         <Grid container spacing={1} key={item.detail_id}>

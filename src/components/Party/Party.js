@@ -28,9 +28,6 @@ class Party extends Component {
   }
 
   componentWillMount() {
-    //const { match: { params } } = this.props;
-    //console.log(this.props)
-    
     this.props.getList(this.props.category);
   }
 
@@ -51,6 +48,7 @@ class Party extends Component {
       const dataIndex = val.dataIndex;
       this.props.deleteParty(list[dataIndex].party_id);
     })
+    
   }
 
   getMuiTheme = () => createMuiTheme({
