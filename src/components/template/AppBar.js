@@ -11,7 +11,8 @@ import {
   LocationCity as LocationCityIcon,
   AttachMoney as MoneyIcon,
   Settings as SettingsIcon,
-  AssignmentTurnedIn as SalesIcon
+  AssignmentTurnedIn as SalesIcon,
+  Domain as DomainIcon
 } from "@material-ui/icons";
 import {Typography,
   IconButton,
@@ -181,7 +182,7 @@ export default props => {
         </Link>
         <Link component={RouterLink} to="/pessoa/fornecedor">
           <ListItem button >
-          <ListItemIcon><PeopleIcon /></ListItemIcon>
+          <ListItemIcon><DomainIcon /></ListItemIcon>
                 <ListItemText primary="Fornecedores" />
           </ListItem>
         </Link>

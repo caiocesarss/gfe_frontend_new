@@ -39,7 +39,7 @@ class PayablesForm extends Component {
             this.props.getInvoiceById(params.invoice_id);
         }
         
-        this.props.getParties();
+        this.props.getParties({is_vendor: 1});
         this.props.getDocumentTypes();
         this.props.getFinGroups();
         this.props.getCustomList('constructions')
