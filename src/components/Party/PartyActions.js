@@ -53,8 +53,15 @@ export function initializeForm(data = INITIAL_DATA){
 }
 
 export async function deleteParty(id) {
-    const request = await axios.delete(`${BASE_URL}/party/${id}`)
-    return { type: 'PARTY_DELETED', payload: request.data[0] }
+    return async dispatch => {
+        const request = await axios.delete(`${BASE_URL}/party/${id}`)
+        
+        if (request.data.error){
+            
+            toastr.error('Erro', request.data.error);
+        }
+        return { type: 'PARTY_DELETED', payload: request.data[0] }
+    }
 }
 
 export function initPartyForm() {

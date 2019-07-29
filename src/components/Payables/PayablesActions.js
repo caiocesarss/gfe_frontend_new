@@ -41,7 +41,7 @@ export function getInvoiceById(invoice_id){
 
 export async function setInvoice(values) {
     const type = values.invoice_id ? 'put' : 'post';
-    values.payment_status = values.payment_status === "0"||values.payment_status === false ? 0 : 1;
+    values.payment_status = values.payment_status == "1" || values.payment_status == true ? "1" : "0";
     return async dispatch => {
         const request = await axios[type](`${BASE_URL}/payables/invoice/setinvoice`, values)
         toastr.success('Sucesso', 'Operação realizada com sucesso');

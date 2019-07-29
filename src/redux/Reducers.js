@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import {reducer as formReducer } from 'redux-form';
+import {reducer as toastrReducer} from 'react-redux-toastr'
 import ConstructionReducer from '../components/Construction/ConstructionReducer';
 import PartyReducer from '../components/Party/PartyReducer';
 import PartyAccountReducer from '../components/Party/PartyAccountReducer';
@@ -16,7 +17,8 @@ const rootReducer = combineReducers ({
     salesOrders: SalesOrdersReducer,
     selectInputs: SelectReducer,
     form: formReducer,
-    location: LocationReducer
+    location: LocationReducer,
+    toastr: toastrReducer
     
 })
 

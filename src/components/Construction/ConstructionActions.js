@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { BASE_URL } from '../../env';
+import { change, initialize } from 'redux-form';
 
 const INITIAL_VALUES = {
-list: []
+
 }
 
 export function getList() {
@@ -13,10 +14,28 @@ export function getList() {
     }
 }
 
-export function createNewConstruction(values, ownProps) {
-    const request = axios.post(`${BASE_URL}/construction`, values)
+export function setConstruction(values, ownProps) {
+    let method = 'post';
+    if (values.construction_id){
+        method = 'put';
+    }
+    const request = axios[method](`${BASE_URL}/construction`, values)
     return {
-        type: 'NEW_CONSTRUCTION_CREATED',
+        type: 'CONSTRUCTION_SAVED',
         payload: request.data
+    }
+}
+
+export function getConstructionById(construction_id){
+    return async  dispatch => {
+        const request = await  axios.get(`${BASE_URL}/construction/${construction_id}`)
+        const data = request.data[0];
+        dispatch(initializeForm(data))
+    }  
+}
+
+export function initializeForm(data = INITIAL_VALUES){  
+    return dispatch => {
+        dispatch(initialize("ConstructionForm", data))
     }
 }

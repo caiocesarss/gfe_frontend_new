@@ -20,7 +20,6 @@ class SaleFurthers extends Component {
     render() {
         const { forwardedRef, classes, saleDetailFurthers, ...props } = this.props;
         let count = 1;
-        console.log(saleDetailFurthers)
         return (
             <div className={classes.content} style={{margin: 10}} ref={forwardedRef}>
                 <h3>Reforços Anuais</h3>

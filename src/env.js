@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://finexbackend.herokuapp.com/api';
+export const BASE_URL = 'http://localhost:3003/api';
 /* https://finexbackend.herokuapp.com/api */
 
 export const tableOptions = {

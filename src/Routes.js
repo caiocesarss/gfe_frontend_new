@@ -21,6 +21,7 @@ import VendorAdd from './components/Party/VendorAdd';
 import CustomerAdd from './components/Party/CustomerAdd';
 import VendorDetail from './components/Party/VendorDetail';
 import CustomerDetail from './components/Party/CustomerDetail';
+import ConstructionDetails from './components/Construction/ConstructionDetails';
 
 
 export default props => {
@@ -43,13 +44,14 @@ export default props => {
     <Route path="/contasClientes/:party_id/detalhes" component={PartyAccountPreForm} />
     <Route path="/pessoa/clientes/incluir" component={CustomerAdd} />
     <Route path="/pessoa/fornecedores/incluir" component={VendorAdd} />
-    {/*<Route path="/clientes/incluir" component={PartyForm} /> */}
     <Route exact path="/payables" component={Payables} />
     <Route exact path="/payables/detalhes/:invoice_id" component={PayablesForm} />
     <Route exact path="/payables/incluir" component={PayablesForm} />
     <Route exact path="/vendas" component={SalesOrders} />
     <Route  path="/vendas/detalhes" component={SalesForm} />
-    <Route  path="/obras/form" component={ConstructionForm} />
+    <Route  exact path="/obras/detalhes" component={ConstructionForm} />
+    <Route  exact path="/obras/detalhes/:construction_id" component={ConstructionForm} />
+    <Route  path="/obras/detalhes" component={ConstructionDetails} />
     <Route  path="/vendas/detalhesvenda/:order_id" component={SalesDetails} />
     <Route  path="/vendas/incluircliente/:order_id" component={SalesFormAddParty} />
     <Route path="*" component={Home} />
