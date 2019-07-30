@@ -25,8 +25,12 @@ export async function setParty(values, ownProps) {
 
 export async function setPartyAccount(values) {
     return async dispatch => {
-        const request = await axios.post(`${BASE_URL}/party/setaccount`, values)
-        return { type: 'PARTY_ACCOUNT_ADDED', payload: request.data }
+        let method = "post";
+        if (values.party_account_id) {
+            method = "put";
+        }
+        const request = await axios[method](`${BASE_URL}/partyAccounts/`, values)
+        return { type: 'PARTY_ACCOUNT_SAVED', payload: request.data }
     }
 }
 
@@ -36,7 +40,28 @@ export async function getPartyById(id) {
         dispatch(initialize('partyForm', request.data[0]))
         return { type: 'PARTY_BY_ID_FETCHED', payload: request.data[0] }
     }
+}
 
+export async function getPartyAccountById(id) {
+    const request = await axios.get(`${BASE_URL}/partyAccounts/getPartyAccountById/${id}`)
+    return dispatch => {
+        dispatch(initialize('partyAccountsForm', request.data[0]))
+        dispatch( getPartyAccountCities(request.data[0].uf_id))
+        dispatch( { type: 'PARTY_ACCOUNTS_BY_ID_FETCHED', payload: request.data[0] })
+    }
+}
+
+export async function getPartyAccountCities (ufId){
+    const request = await axios.get(`${BASE_URL}/city/${ufId}`)
+    return { type: 'PARTY_ACCOUNTS_CITIES_FETCHED', payload: request }
+}
+
+export async function getPartyContactsList (id){
+    const request = axios.get(`${BASE_URL}/partyAccounts/contactsList/${id}`)
+    return {
+        type: 'PARTY_ACCOUNT_CONTACTS_FETCHED',
+        payload: request
+    }
 }
 
 export async function updateParty(partyData) {
@@ -46,9 +71,9 @@ export async function updateParty(partyData) {
     }
 }
 
-export function initializeForm(data = INITIAL_DATA){
+export function initializeForm(data = INITIAL_DATA, form = "partyForm"){
     return dispatch => {
-        dispatch(initialize("partyForm", data))
+        dispatch(initialize(form, data))
     }
 }
 

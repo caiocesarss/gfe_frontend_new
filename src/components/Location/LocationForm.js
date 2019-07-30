@@ -31,17 +31,21 @@ class LocationForm extends Component {
         this.props.getUF();
     }
 
-
-
     render() {
         const { forwardedRef, ...props } = this.props;
-        const { classes } = this.props;
+        const { classes, partyAccountCities } = this.props;
         const UFData = this.props.UFList;
         const selectUF = UFData.map(item => {
             return ({name: item.code, id: item.uf_id})
         }) || [];
 
-        const cityData = this.props.cityList;
+        let cityData = this.props.cityList;
+        
+        if (cityData.length < 1) {
+            if (partyAccountCities ) {
+                cityData = partyAccountCities.data;
+            }
+        }
         const selectCity = cityData.map(item => {
             return ({name: item.name, id:item.city_id})
         })
@@ -91,7 +95,15 @@ class LocationForm extends Component {
                             </Grid>
                             <Grid item xs={12} md={1}>
                                 <Field
-                                    name="uf"
+                                    name="zip"
+                                    textField={{ fullWidth: true }}
+                                    component={LabelAndInput}
+                                    label="CEP"
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={1}>
+                                <Field
+                                    name="uf_id"
                                     component={InputSelect}
                                     selectField={{ fullWidth: true }}
                                     inputProps={{ name: 'uf', id: 'seluf' }}
@@ -100,9 +112,9 @@ class LocationForm extends Component {
                                     label="UF"
                                 />
                             </Grid>
-                            <Grid item xs={12} md={3}>
+                            <Grid item xs={12} md={2}>
                                 <Field
-                                    name="city"
+                                    name="city_id"
                                     component={InputSelect}
                                     selectField={{ fullWidth: true }}
                                     inputProps={{ name: 'city', id: 'selcity' }}
@@ -129,7 +141,8 @@ LocationForm.propTypes = {
 
 const mapStateToPropos = state => ({
     UFList: state.location.UFList,
-    cityList: state.location.cityList
+    cityList: state.location.cityList,
+    partyAccountCities: state.party.partyAccountCities
 });
 const mapDispatchToProps = (dispatch, ownProps) =>
     bindActionCreators({

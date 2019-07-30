@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import EditIcon from '@material-ui/icons/Edit';
+import PhoneIcon from '@material-ui/icons/ContactPhone';
 import Link from '@material-ui/core/Link';
 import dateFormat from 'dateformat';
 import ReduxToastr from 'react-redux-toastr';
@@ -130,8 +131,12 @@ class Party extends Component {
               <div>
                 <Link component={RouterLink} to={`/contasPessoa/${partyId}`}>
                   <IconButton size="small" aria-label="Edit" >
-
                     <OpenInNewIcon />
+                  </IconButton>
+                </Link>
+                <Link component={RouterLink} to={`/pessoa/${this.props.category}/detalhes/${partyId}`}>
+                  <IconButton size="small" aria-label="Edit">
+                    <PhoneIcon />
                   </IconButton>
                 </Link>
                 <Link component={RouterLink} to={`/pessoa/${this.props.category}/detalhes/${partyId}`}>

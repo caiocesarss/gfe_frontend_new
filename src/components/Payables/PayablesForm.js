@@ -254,7 +254,7 @@ const mapStateToPropos = state => ({
     constructionsList: state.selectInputs.list,
     InvoiceById: state.payables.InvoiceById
 });
-const mapDispatchToProps = (dispatch, ownProps) =>
+const mapDispatchToProps = (dispatch) =>
     bindActionCreators({
         setInvoice,
         getParties,

@@ -8,22 +8,22 @@ import PropTypes from 'prop-types';
 import MUIDataTable from "mui-datatables";
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import PhoneIcon from '@material-ui/icons/ContactPhone';
 import { Edit as EditIcon } from '@material-ui/icons';
 import Link from '@material-ui/core/Link';
 
 import PageHeader from '../template/PageHeader';
-import { getList } from './PartyAccountActions';
+import { getPartyContactsList } from './PartyActions';
+
 import { defaultClass } from '../../common/Constants';
 
 const styles = defaultClass
 
-class PartyAccount extends Component {
+class PartyContact extends Component {
 
   componentWillMount() {
     const { match: { params } } = this.props;
 
-    this.props.getList(params.party_id);
+    this.props.getPartyContactsList(params.party_account_id);
   }
 
   getMuiTheme = () => createMuiTheme({
@@ -129,18 +129,11 @@ class PartyAccount extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             const accountId = tableMeta.rowData ? tableMeta.rowData[0] : '';
             return (
-              <>
-              <Link component={RouterLink} to={`/contasPessoa/contatos/${accountId}`}>
-                  <IconButton size="small" aria-label="Edit">
-                    <PhoneIcon />
-                  </IconButton>
-                </Link>
               <Link component={RouterLink} to={`/contasPessoa/detalhes/${accountId}`}>
                 <IconButton size="small" aria-label="Edit">
                   <EditIcon />
                 </IconButton>
               </Link>
-              </>
             );
           }
         }
@@ -157,8 +150,8 @@ class PartyAccount extends Component {
 
       <main className={classes.content}>
         <PageHeader
-          title="Contas de Cliente"
-          subtitle="Cadastro de Contas de Cliente"
+          title="Contatos"
+          subtitle="Cadastro de Contatos de Cliente"
           linkTo={`/contasClientes/${params.party_id}/detalhes`}
           buttonType="primary"
           showPageHeaderRight={true}
@@ -182,17 +175,17 @@ class PartyAccount extends Component {
 
 }
 
-PartyAccount.propTypes = {
+PartyContact.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-const mapStateToPropos = state => ({ list: state.partyAccount.list });
+const mapStateToPropos = state => ({ list: state.party.list });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getList }, dispatch);
+  bindActionCreators({ getPartyContactsList }, dispatch);
 
-PartyAccount = connect(mapStateToPropos, mapDispatchToProps)(PartyAccount)
+PartyContact = connect(mapStateToPropos, mapDispatchToProps)(PartyContact)
 
-const Comp = withStyles(styles)(PartyAccount)
+const Comp = withStyles(styles)(PartyContact)
 export default
   React.forwardRef((props, ref) => <Comp {...props} forwardedRef={ref} />);
