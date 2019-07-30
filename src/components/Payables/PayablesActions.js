@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { toastr } from 'react-redux-toastr';
 import { change, initialize } from 'redux-form';
-import dateFormat from 'dateformat'
+import dateFormat from 'dateformat';
 
-const BASE_URL = 'http://localhost:3003/api';
+import { BASE_URL } from '../../env';
+
 const INITIAL_VALUES = {
     payablesList: [],
     APPartyList: [],
