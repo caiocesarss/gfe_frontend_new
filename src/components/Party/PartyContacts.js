@@ -11,9 +11,9 @@ import IconButton from '@material-ui/core/IconButton';
 import { Edit as EditIcon } from '@material-ui/icons';
 import Link from '@material-ui/core/Link';
 
+
 import PageHeader from '../template/PageHeader';
 import { getPartyContactsList } from './PartyActions';
-
 import { defaultClass } from '../../common/Constants';
 
 const styles = defaultClass
@@ -22,8 +22,18 @@ class PartyContact extends Component {
 
   componentWillMount() {
     const { match: { params } } = this.props;
+    let id;
+    let type;
+    if (params.party_id){
+      id = params.party_id
+      type = 'contactsListByParty';
+    }
 
-    this.props.getPartyContactsList(params.party_account_id);
+    if (params.party_account_id){
+      id = params.party_account_id;
+      type = 'contactsListByAccount';
+    }
+    this.props.getPartyContactsList(id, type);
   }
 
   getMuiTheme = () => createMuiTheme({
@@ -46,78 +56,49 @@ class PartyContact extends Component {
     }
   });
 
+ 
+
   render() {
     const { forwardedRef, ...props } = this.props;
     const { classes } = this.props;
-    const list = this.props.list || [];
+    const data = this.props.partyAccountContactsList || [];
+    const { match: { params } } = this.props;
+
+    console.log(this.props)
 
     const columns = [
       {
-        name: "party_account_id",
+        name: "contact_id",
         options: {
           display: false
         }
       },
       {
-        name: "account_alias_name",
-        label: "Nome",
+        name: "contact_type",
+        label: "Tipo",
         options: {
           filter: true,
           sort: true,
-        }
-      },
-      {
-        name: "city_name",
-        label: "Cidade",
-        options: {
-          filter: true,
-          sort: true
-        }
-      },
-      {
-        name: "uf",
-        label: "UF",
-        options: {
-          filter: true,
-          sort: true
-        }
-      },
-      {
-        name: "legal_account_name",
-        label: "Razão Social",
-        options: {
-          filter: true,
-          sort: true,
-        }
-      },
-      {
-        name: "doc1_value",
-        label: "CPF/CNPJ",
-        options: {
-          filter: true,
-          sort: false,
-          customBodyRender: (value, tableMeta, updateValue) => {
-
-            return (
-              value
-            );
+          customBodyRender: (value, tableMeta, updateValue) => { 
+            if (value === 'EMAIL'){
+              return 'E-mail'
+            }
+            if (value === 'BILLING_EMAIL') {
+              return 'E-mail Cobrança'
+            }
+            if (value === 'PHONE') {
+              return 'Telefone'
+            }
+            return value
           }
-        },
-      },
-      {
-        name: "doc2_value",
-        label: "RG/IE",
-        options: {
-          filter: true,
-          sort: true,
         }
       },
       {
-        name: "created_at",
-        label: "Data Registro",
+        name: "contact_value",
+        label: "Número/Endereço",
         options: {
           filter: true,
-          sort: false,
+          sort: true,
         }
       },
       {
@@ -129,7 +110,7 @@ class PartyContact extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             const accountId = tableMeta.rowData ? tableMeta.rowData[0] : '';
             return (
-              <Link component={RouterLink} to={`/contasPessoa/detalhes/${accountId}`}>
+              <Link component={RouterLink} to={`/contasPessoa/contatos/detalhes/${params.party_account_id}/${accountId}`}>
                 <IconButton size="small" aria-label="Edit">
                   <EditIcon />
                 </IconButton>
@@ -139,12 +120,11 @@ class PartyContact extends Component {
         }
       },
     ];
-    const data = list;
+  
     const options = {
       filterType: 'checkbox',
       responsive: 'stacked',
     };
-    const { match: { params } } = this.props;
 
     return (
 
@@ -152,7 +132,7 @@ class PartyContact extends Component {
         <PageHeader
           title="Contatos"
           subtitle="Cadastro de Contatos de Cliente"
-          linkTo={`/contasClientes/${params.party_id}/detalhes`}
+          linkTo={`/pessoa/contatos/form/${params.party_id}/${params.party_account_id}`}
           buttonType="primary"
           showPageHeaderRight={true}
         />
@@ -160,15 +140,13 @@ class PartyContact extends Component {
         <Grid item xs={12}>
           <MuiThemeProvider theme={this.getMuiTheme()}>
             <MUIDataTable
-              title={"Contas de Cliente"}
+
               data={data}
               columns={columns}
               options={options}
             />
           </MuiThemeProvider>
         </Grid>
-
-
       </main>
     )
   }
@@ -179,7 +157,10 @@ PartyContact.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-const mapStateToPropos = state => ({ list: state.party.list });
+const mapStateToPropos = state => ({ 
+  partyAccountContactsList: state.party.partyAccountContactsList,
+  partyById: state.party.partyById
+ });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ getPartyContactsList }, dispatch);

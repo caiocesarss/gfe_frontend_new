@@ -34,6 +34,17 @@ export async function setPartyAccount(values) {
     }
 }
 
+export async function setPartyContact(values){
+    return async dispatch => {
+        let method = "post";
+        if (values.contact_id) {
+            method = "put";
+        }
+        const request = await axios[method](`${BASE_URL}/partyAccounts/contact`, values)
+        return { type: 'PARTY_CONTACT_SAVED', payload: request.data }
+    }
+}
+
 export async function getPartyById(id) {
     const request = await axios.get(`${BASE_URL}/party/getById/${id}`)
     return dispatch => {
@@ -56,11 +67,19 @@ export async function getPartyAccountCities (ufId){
     return { type: 'PARTY_ACCOUNTS_CITIES_FETCHED', payload: request }
 }
 
-export async function getPartyContactsList (id){
-    const request = axios.get(`${BASE_URL}/partyAccounts/contactsList/${id}`)
+export async function getPartyContactsList (id, type){
+    const request = await axios.get(`${BASE_URL}/partyAccounts/${type}/${id}`)
     return {
         type: 'PARTY_ACCOUNT_CONTACTS_FETCHED',
-        payload: request
+        payload: request.data
+    }
+}
+
+export async function getPartyContactById (id){
+    const request = await axios.get(`${BASE_URL}/partyAccounts/getPartyContactById/${id}`)
+    return dispatch => {
+        dispatch(initialize('partyContactsForm', request.data))
+        dispatch( { type: 'PARTY_CONTACT_BY_ID_FETCHED', payload: request.data })
     }
 }
 

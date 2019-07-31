@@ -134,7 +134,7 @@ class Party extends Component {
                     <OpenInNewIcon />
                   </IconButton>
                 </Link>
-                <Link component={RouterLink} to={`/pessoa/${this.props.category}/detalhes/${partyId}`}>
+                <Link component={RouterLink} to={`/pessoa/${this.props.category}/contatos/${partyId}`}>
                   <IconButton size="small" aria-label="Edit">
                     <PhoneIcon />
                   </IconButton>

@@ -24,6 +24,7 @@ import CustomerDetail from './components/Party/CustomerDetail';
 import ConstructionDetails from './components/Construction/ConstructionDetails';
 import PartyAccountFormDetail from "./components/Party/PartyAccountFormDetail";
 import PartyContacts from "./components/Party/PartyContacts";
+import PartyContactsForm from "./components/Party/PartyContactsForm";
 
 
 export default props => {
@@ -41,10 +42,14 @@ export default props => {
     <Route exact path="/pessoa/detalhes/:party_id" component={PartyDetail}/>
     <Route exact path="/clientes/detalhes/:party_id" component={PartyDetail} />
     <Route exact path="/pessoa/cliente/detalhes/:party_id" component={CustomerDetail} />
+
     <Route exact path="/pessoa/fornecedor/detalhes/:party_id" component={VendorDetail} />
     <Route exact path="/contasPessoa/:party_id" component={PartyAccount} />
     <Route exact path="/contasPessoa/detalhes/:account_id" component={PartyAccountFormDetail} />
-    <Route exact path="/contasPessoa/contatos/:party_account_id" component={PartyContacts} />
+    <Route exact path="/contasPessoa/contatos/:party_id/:party_account_id" component={PartyContacts} />
+    <Route exact path="/pessoa/cliente/contatos/:party_id" component={PartyContacts} />
+    <Route exact path="/pessoa/contatos/form/:party_id/:party_account_id" component={PartyContactsForm} />
+    <Route exact path="/contasPessoa/contatos/detalhes/:party_account_id/:contact_id" component={PartyContactsForm} />
     <Route path="/contasClientes/:party_id/detalhes" component={PartyAccountPreForm} />
     <Route path="/pessoa/clientes/incluir" component={CustomerAdd} />
     <Route path="/pessoa/fornecedores/incluir" component={VendorAdd} />

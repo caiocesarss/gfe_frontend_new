@@ -54,7 +54,6 @@ class PartyDetail extends Component {
                     
                     buttonType="primary"
                 />
-
                 <Grid item xs={12}>
                     <form role="form" onSubmit={handleSubmit(async data => {
                                                                         const result = await this.props.updateParty(data)

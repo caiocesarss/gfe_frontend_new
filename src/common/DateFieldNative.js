@@ -46,6 +46,7 @@ export default props => {
             name={props.name}
             onBlur={props.onBlur}
             type="date"
+            InputLabelProps={{ shrink: true }}
             margin={props.margin || "dense"}
             {...input}
              />

@@ -50,6 +50,8 @@ class PartyAccount extends Component {
     const { forwardedRef, ...props } = this.props;
     const { classes } = this.props;
     const list = this.props.list || [];
+    const { match: { params } } = this.props;
+    const partyId = params.party_id;
 
     const columns = [
       {
@@ -130,7 +132,7 @@ class PartyAccount extends Component {
             const accountId = tableMeta.rowData ? tableMeta.rowData[0] : '';
             return (
               <>
-              <Link component={RouterLink} to={`/contasPessoa/contatos/${accountId}`}>
+              <Link component={RouterLink} to={`/contasPessoa/contatos/${partyId}/${accountId}`}>
                   <IconButton size="small" aria-label="Edit">
                     <PhoneIcon />
                   </IconButton>
@@ -151,7 +153,6 @@ class PartyAccount extends Component {
       filterType: 'checkbox',
       responsive: 'stacked',
     };
-    const { match: { params } } = this.props;
 
     return (
 

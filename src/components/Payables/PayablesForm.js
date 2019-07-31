@@ -141,6 +141,7 @@ class PayablesForm extends Component {
                                     label="Data Emissão"
                                     textField={{ fullWidth: true }}
                                     component={DateFieldNative}
+                                    
                                 />
                             </Grid>
                             <Grid item xs={6} md={2}>

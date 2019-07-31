@@ -43,6 +43,7 @@ class SalesFormAddParty extends Component {
                         <TextField
                             fullWidth
                             disabled
+                            InputLabelProps={{ shrink: true }}
                             label="Obra"
                             value={saleData.construction_name}
                             className={classes.textField}
@@ -52,6 +53,7 @@ class SalesFormAddParty extends Component {
                         <TextField
                             fullWidth
                             disabled
+                            InputLabelProps={{ shrink: true }}
                             label="Unidade"
                             value={saleData.room_number}
                             className={classes.textField}
