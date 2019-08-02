@@ -202,13 +202,13 @@ class PayablesForm extends Component {
                                     inputProps={{ name: "group", id: "group" }}
                                 />
                             </Grid>
-                            <Grid item xs={6} md={4}>
+                            <Grid item xs={6} md={3}>
                                 <Field name="major_item"
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Iten(s)" />
                             </Grid>
-                            <Grid item xs={6} md={4}>
+                            <Grid item xs={6} md={3}>
                                 <Field name="invoice_details"
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
@@ -222,6 +222,14 @@ class PayablesForm extends Component {
                                     selectItems={selectConstructionsItems}
                                     label="Obra"
                                     inputProps={{ name: "construction", id: "construction" }}
+                                />
+                            </Grid>
+                            <Grid item xs={6} md={2}>
+                                <Field
+                                    name="payment_date"
+                                    label="Data Pagamento"
+                                    textField={{ fullWidth: true }}
+                                    component={DateFieldNative}
                                 />
                             </Grid>
                             <Grid item xs={6} md={1}>

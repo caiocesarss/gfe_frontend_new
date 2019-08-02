@@ -8,12 +8,14 @@ import PayablesReducer from '../components/Payables/PayablesReducer';
 import SalesOrdersReducer from '../components/Sales/SalesOrdersReducer';
 import SelectReducer from '../common/SelectReducer';
 import LocationReducer from '../components/Location/LocationReducer';
+import ReceivablesReducer from '../components/Receivables/ReceivablesReducer';
 
 const rootReducer = combineReducers ({
     construction: ConstructionReducer,
     party: PartyReducer,
     partyAccount: PartyAccountReducer,
     payables: PayablesReducer,
+    receivables: ReceivablesReducer,
     salesOrders: SalesOrdersReducer,
     selectInputs: SelectReducer,
     form: formReducer,

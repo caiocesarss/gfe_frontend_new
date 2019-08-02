@@ -77,10 +77,11 @@ class Partyform extends Component {
 
                             <Grid item xs={6} md={2}>
                                 <Field name="type"
+                                normalize={value => value.toUpperCase()}
                                     component={InputSelect}
                                     selectField={{ fullWidth: true }}
                                     label="Tipo"
-                                    inputProps={{ name: 'constructionSelect', id: 'selconst' }}
+                                    inputProps={{ name: 'constructionSelect', id: 'selconst'}}
                                     selectItems={selectItems} />
                             </Grid>
                             <Grid item xs={6} md={2}>

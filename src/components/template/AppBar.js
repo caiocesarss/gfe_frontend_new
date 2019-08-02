@@ -198,7 +198,7 @@ export default props => {
                 <ListItemText primary="Vendas" />
           </ListItem>
         </Link>
-        <Link component={RouterLink} to="/">
+        <Link component={RouterLink} to="/receivables">
           <ListItem button >
           <ListItemIcon><MoneyIcon /></ListItemIcon>
                 <ListItemText primary="Contas a Receber" />
