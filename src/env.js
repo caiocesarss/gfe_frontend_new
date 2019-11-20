@@ -1,8 +1,11 @@
-export const BASE_URL = 'https://finexbackend.herokuapp.com/api';
+//export const BASE_URL = 'http://localhost:3003/api';
+//export const OAPI_URL = 'http://localhost:3003/oapi';
+export const BASE_URL = 'http://ec2-54-86-62-158.compute-1.amazonaws.com:3003/api';
+export const OAPI_URL = 'http://ec2-54-86-62-158.compute-1.amazonaws.com:3003/oapi';
 /* https://finexbackend.herokuapp.com/api */
 
 export const tableOptions = {
-    filterType: 'checkbox',
+    filterType: 'dropdown',
     responsive: 'scroll',
     textLabels: {
       body: {
