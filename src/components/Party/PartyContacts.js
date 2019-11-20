@@ -13,12 +13,17 @@ import Link from '@material-ui/core/Link';
 
 
 import PageHeader from '../template/PageHeader';
-import { getPartyContactsList } from './PartyActions';
+import { getPartyContactsList, deletePartyContact } from './PartyActions';
 import { defaultClass } from '../../common/Constants';
+import Dialog from '../../common/Dialog';
 
 const styles = defaultClass
 
 class PartyContact extends Component {
+  state = {
+    openDialog: false,
+    selectedRows: {}
+  }
 
   componentWillMount() {
     const { match: { params } } = this.props;
@@ -34,6 +39,26 @@ class PartyContact extends Component {
       type = 'contactsListByAccount';
     }
     this.props.getPartyContactsList(id, type);
+  }
+
+  rowDelete(selectedRows) {
+    this.setState({selectedRows:selectedRows})
+    this.setState({openDialog: true})
+  }
+  
+  handleCloseDialog   = () => {
+    this.setState({openDialog: false})
+  }
+
+  handleDialogAccept = () => {
+    this.setState({openDialog: false})
+    const selectedRows = this.state.selectedRows;
+    const list = this.props.partyAccountContactsList
+    selectedRows.data.map(val => {
+      const dataIndex = val.dataIndex;
+      this.props.deletePartyContact(list[dataIndex].contact_id);
+    })
+    
   }
 
   getMuiTheme = () => createMuiTheme({
@@ -63,6 +88,7 @@ class PartyContact extends Component {
     const { classes } = this.props;
     const data = this.props.partyAccountContactsList || [];
     const { match: { params } } = this.props;
+    const {openDialog } = this.state;
 
     console.log(this.props)
 
@@ -136,14 +162,18 @@ class PartyContact extends Component {
           buttonType="primary"
           showPageHeaderRight={true}
         />
-
+        <Dialog 
+          title="Excluir Registro" 
+          text="Tem certeza que deseja excluir este registro?" 
+          open={openDialog} 
+          handleClose={this.handleCloseDialog} 
+          handleDialogAccept={this.handleDialogAccept}/>
         <Grid item xs={12}>
           <MuiThemeProvider theme={this.getMuiTheme()}>
             <MUIDataTable
-
               data={data}
               columns={columns}
-              options={options}
+              options={{options, onRowsDelete: data => this.rowDelete(data)}}
             />
           </MuiThemeProvider>
         </Grid>
@@ -163,7 +193,7 @@ const mapStateToPropos = state => ({
  });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getPartyContactsList }, dispatch);
+  bindActionCreators({ getPartyContactsList, deletePartyContact }, dispatch);
 
 PartyContact = connect(mapStateToPropos, mapDispatchToProps)(PartyContact)
 

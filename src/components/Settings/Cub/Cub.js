@@ -14,21 +14,21 @@ import EditIcon from '@material-ui/icons/Edit';
 import CurrencyFormat from 'react-currency-format';
 import dateFormat from 'dateformat'
 
-import PageHeader from '../template/PageHeader';
-import { defaultClass } from '../../common/Constants';
-import { getList } from './PayablesActions';
-import { tableOptions} from '../../env';
-import Dialog from '../../common/Dialog';
+import PageHeader from '../../template/PageHeader';
+import { defaultClass } from '../../../common/Constants';
+import { getCubList} from './CubActions';
+import { tableOptions} from '../../../env';
+import Dialog from '../../../common/Dialog';
 
 const styles = defaultClass
 
-class Payables extends Component {
+class Cub extends Component {
   state = {
     openDialog: false,
     selectedRows: {}
   }
   componentWillMount() {
-    this.props.getList();
+    this.props.getCubList();
   }
 
   rowDelete(selectedRows) {
@@ -76,14 +76,22 @@ class Payables extends Component {
 
     const columns = [
       {
-        name: "invoice_id",
+        name: "cub_id",
         options: {
           display: false
         }
       },
       {
-        name: "invoice_number",
-        label: "Num. Doc.",
+        name: "year",
+        label: "Ano",
+        options: {
+          filter: true,
+          sort: true,
+        }
+      },
+      {
+        name: "month",
+        label: "Mês",
         options: {
           filter: true,
           sort: true,
@@ -109,85 +117,7 @@ class Payables extends Component {
           }
         }
       },
-      {
-        name: "party",
-        label: "Credor",
-        options: {
-          filter: true,
-          sort: true
-        }
-      },
-      {
-        name: "invoice_date",
-        label: "Dt Emissão",
-        options: {
-          filter: true,
-          sort: true,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return ( 
-              value && dateFormat(value, "dd/mm/yyyy")
-              
-            );
-          }
-        }
-      },
-      {
-        name: "due_date",
-        label: "Dt Vencto.",
-        options: {
-          filter: true,
-          sort: true,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return ( 
-              value && dateFormat(value, "dd/mm/yyyy")
-              
-            );
-          }
-        }
-      },
-      {
-        name: "construction_name",
-        label: "Obra",
-        options: {
-          filter: true,
-          sort: true,
-        }
-      },
-      {
-        name: "document_type",
-        label: "Tipo Doc",
-        options: {
-          filter: true,
-          sort: true,
-        }
-      },
-      {
-        name: "payment_status",
-        label: "Status Pgto",
-        options: {
-          filter: true,
-          sort: true,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return value == 1 ? "PAGO" : "EM ABERTO";
-          }
-        }
-      },
-      {
-        name: "payment_date",
-        label: "Dt Pgto",
-        options: {
-          filter: true,
-          sort: true,
-        }
-      },
-      {
-        name: "major_item",
-        label: "Produtos",
-        options: {
-          filter: true,
-          sort: true,
-        }
-      },
+      
       {
         label: "Ações",
         options: {
@@ -198,7 +128,7 @@ class Payables extends Component {
             const invoiceId = tableMeta.rowData ? tableMeta.rowData[0] : '';
 
             return (
-              <Link component={RouterLink} to={`/payables/detalhes/${invoiceId}`}>
+              <Link component={RouterLink} to={`cub/detalhes/${invoiceId}`}>
                     <IconButton size="small" aria-label="Edit">
                       <EditIcon />
                     </IconButton>
@@ -208,16 +138,16 @@ class Payables extends Component {
         }
       },
     ];
-    const data = this.props.payablesList || [];
+    const data = this.props.CubList || [];
 
     return (
 
       <main className={classes.content}>
 
         <PageHeader
-          title="Contas a Pagar"
+          title="Cub"
           subtitle="Registros"
-          linkTo="/payables/incluir"
+          linkTo="/settings/cub/detalhes"
           buttonType="primary"
           showPageHeaderRight={true}
         />
@@ -240,15 +170,15 @@ class Payables extends Component {
 
 }
 
-Payables.propTypes = {
+Cub.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-const mapStateToPropos = state => ({ payablesList: state.payables.payablesList });
+const mapStateToPropos = state => ({ CubList: state.cub.CubList });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getList }, dispatch);
+  bindActionCreators({ getCubList }, dispatch);
 
-const retorno = connect(mapStateToPropos, mapDispatchToProps)(Payables)
+const retorno = connect(mapStateToPropos, mapDispatchToProps)(Cub)
 
 export default withStyles(styles)(retorno)

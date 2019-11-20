@@ -8,17 +8,21 @@ import PropTypes from 'prop-types';
 import MUIDataTable from "mui-datatables";
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import Link from '@material-ui/core/Link';
 import EditIcon from '@material-ui/icons/Edit';
+import RedoIcon from '@material-ui/icons/Redo';
 import CurrencyFormat from 'react-currency-format';
-import dateFormat from 'dateformat'
+import dateFormat from 'dateformat';
+import ReduxToastr from 'react-redux-toastr';
 
 import PageHeader from '../template/PageHeader';
 import { defaultClass } from '../../common/Constants';
-import { getReceivablesList } from './ReceivablesActions';
-import { tableOptions} from '../../env';
+import { getReceivablesList, reSendInvoice } from './ReceivablesActions';
+import { tableOptions } from '../../env';
 import Dialog from '../../common/Dialog';
+
 
 const styles = defaultClass
 
@@ -32,16 +36,16 @@ class Receivables extends Component {
   }
 
   rowDelete(selectedRows) {
-    this.setState({selectedRows:selectedRows})
-    this.setState({openDialog: true})
+    this.setState({ selectedRows: selectedRows })
+    this.setState({ openDialog: true })
   }
 
-  handleCloseDialog   = () => {
-    this.setState({openDialog: false})
+  handleCloseDialog = () => {
+    this.setState({ openDialog: false })
   }
 
   handleDialogAccept = () => {
-    this.setState({openDialog: false})
+    this.setState({ openDialog: false })
     const selectedRows = this.state.selectedRows;
     const list = this.props.list
     selectedRows.data.map(val => {
@@ -50,12 +54,16 @@ class Receivables extends Component {
     })
   }
 
+  reSendInvoice(invoiceId) {
+    this.props.reSendInvoice(invoiceId);
+  }
+
   getMuiTheme = () => createMuiTheme({
     overrides: {
       MUIDataTable: {
         root: {
           backgroundColor: "#FF000",
-
+          fontSize: '9px'
         },
         paper: {
           boxShadow: "none",
@@ -64,7 +72,8 @@ class Receivables extends Component {
       },
       MUIDataTableBodyCell: {
         root: {
-          backgroundColor: "#FFF"
+          backgroundColor: "#FFF",
+          fontSize: '11px'
         }
       }
     }
@@ -72,7 +81,7 @@ class Receivables extends Component {
 
   render() {
     const { classes } = this.props;
-    const {openDialog } = this.state;
+    const { openDialog } = this.state;
 
     const columns = [
       {
@@ -100,15 +109,15 @@ class Receivables extends Component {
           filter: false,
           sort: true,
           customBodyRender: (value, tableMeta, updateValue) => {
-            return ( 
+            return (
               <CurrencyFormat
-                  displayType={'text'}
-                  value={Number(value)}
-                  thousandSeparator="."
-                  decimalSeparator=","
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                  prefix={'R$ '} />
+                displayType={'text'}
+                value={Number(value)}
+                thousandSeparator="."
+                decimalSeparator=","
+                decimalScale={2}
+                fixedDecimalScale={true}
+                prefix={'R$ '} />
             );
           }
         }
@@ -120,15 +129,15 @@ class Receivables extends Component {
           filter: false,
           sort: true,
           customBodyRender: (value, tableMeta, updateValue) => {
-            return ( 
+            return (
               <CurrencyFormat
-                  displayType={'text'}
-                  value={Number(value)}
-                  thousandSeparator="."
-                  decimalSeparator=","
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                  prefix={'R$ '} />
+                displayType={'text'}
+                value={Number(value)}
+                thousandSeparator="."
+                decimalSeparator=","
+                decimalScale={2}
+                fixedDecimalScale={true}
+                prefix={'R$ '} />
             );
           }
         }
@@ -138,17 +147,18 @@ class Receivables extends Component {
         label: "Valor em CUB",
         options: {
           filter: false,
+          display: false,
           sort: true,
           customBodyRender: (value, tableMeta, updateValue) => {
-            return ( 
+            return (
               <CurrencyFormat
-                  displayType={'text'}
-                  value={Number(value)}
-                  thousandSeparator="."
-                  decimalSeparator=","
-                  decimalScale={4}
-                  fixedDecimalScale={true}
-                   />
+                displayType={'text'}
+                value={Number(value)}
+                thousandSeparator="."
+                decimalSeparator=","
+                decimalScale={4}
+                fixedDecimalScale={true}
+              />
             );
           }
         }
@@ -172,7 +182,13 @@ class Receivables extends Component {
         label: "Cliente",
         options: {
           filter: true,
-          sort: true
+          sort: true,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            let name = value.length > 10 ? value.substring(0, 10) + '...' : value;
+            return (
+              name
+            );
+          }
         }
       },
       {
@@ -182,9 +198,9 @@ class Receivables extends Component {
           filter: true,
           sort: true,
           customBodyRender: (value, tableMeta, updateValue) => {
-            return ( 
+            return (
               value && dateFormat(value, "dd/mm/yyyy")
-              
+
             );
           }
         }
@@ -196,9 +212,9 @@ class Receivables extends Component {
           filter: true,
           sort: true,
           customBodyRender: (value, tableMeta, updateValue) => {
-            return ( 
+            return (
               value && dateFormat(value, "dd/mm/yyyy")
-              
+
             );
           }
         }
@@ -233,6 +249,7 @@ class Receivables extends Component {
         options: {
           filter: true,
           sort: true,
+          display: false,
           hint: "REGISTRADO, FATURADO, CANCELADO"
         }
       },
@@ -263,11 +280,23 @@ class Receivables extends Component {
             const invoiceId = tableMeta.rowData ? tableMeta.rowData[0] : '';
 
             return (
-              <Link component={RouterLink} to={`/receivables/detalhes/${invoiceId}`}>
-                    <IconButton size="small" aria-label="Edit">
-                      <EditIcon />
-                    </IconButton>
-                  </Link>
+              <>
+                <Link component={RouterLink} to={`/receivables/detalhes/${invoiceId}`}>
+                  <IconButton size="small" aria-label="Edit">
+                    <EditIcon />
+                  </IconButton>
+                </Link>
+                <Link component={RouterLink} to={`/receivables/registrarpgto/${invoiceId}`}>
+                  <IconButton size="small" aria-label="Edit">
+                    <MonetizationOnIcon />
+                  </IconButton>
+                </Link>
+
+                <IconButton size="small" aria-label="Edit" onClick={() => { this.reSendInvoice(invoiceId) }}>
+                  <RedoIcon />
+                </IconButton>
+
+              </>
             );
           }
         }
@@ -278,7 +307,15 @@ class Receivables extends Component {
     return (
 
       <main className={classes.content}>
-
+        <ReduxToastr
+          timeOut={4000}
+          newestOnTop={false}
+          preventDuplicates
+          position="top-right"
+          transitionIn="fadeIn"
+          transitionOut="fadeOut"
+          progressBar
+          closeOnToastrClick />
         <PageHeader
           title="Contas a Receber"
           subtitle="Registros"
@@ -286,13 +323,13 @@ class Receivables extends Component {
           buttonType="primary"
           showPageHeaderRight={true}
         />
-        <Dialog title="Excluir Registro" text="Tem certeza que deseja excluir este registro?" open={openDialog} handleClose={this.handleCloseDialog} handleDialogAccept={this.handleDialogAccept}/>
+        <Dialog title="Excluir Registro" text="Tem certeza que deseja excluir este registro?" open={openDialog} handleClose={this.handleCloseDialog} handleDialogAccept={this.handleDialogAccept} />
         <Grid item xs={12}>
           <MuiThemeProvider theme={this.getMuiTheme()}>
             <MUIDataTable
               data={data}
               columns={columns}
-              options={{...tableOptions, onRowsDelete: data => this.rowDelete(data)}}
+              options={{ ...tableOptions, onRowsDelete: data => this.rowDelete(data) }}
             />
           </MuiThemeProvider>
         </Grid>
@@ -311,7 +348,7 @@ Receivables.propTypes = {
 const mapStateToPropos = state => ({ receivablesList: state.receivables.receivablesList });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getReceivablesList }, dispatch);
+  bindActionCreators({ getReceivablesList, reSendInvoice }, dispatch);
 
 const retorno = connect(mapStateToPropos, mapDispatchToProps)(Receivables)
 

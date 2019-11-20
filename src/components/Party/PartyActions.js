@@ -108,6 +108,18 @@ export async function deleteParty(id) {
     }
 }
 
+export async function deletePartyContact(id) {
+    return async dispatch => {
+        const request = await axios.delete(`${BASE_URL}/partyAccounts/contact/${id}`)
+        
+        if (request.data.error){
+            
+            toastr.error('Erro', request.data.error);
+        }
+        return { type: 'CONTACT_DELETED', payload: request.data[0] }
+    }
+}
+
 export function initPartyForm() {
     return dispatch => dispatch(reset('partyForm'));
 }

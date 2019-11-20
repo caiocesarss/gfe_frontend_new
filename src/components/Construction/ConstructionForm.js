@@ -65,7 +65,7 @@ class ConstructionForm extends Component {
                 <Grid item xs={12}>
                     <form role="form" onSubmit={handleSubmit(data => {
                         this.props.setConstruction(data)
-                        this.props.history.pushState(null, '/');
+                        //this.props.history.pushState(null, '/');
                         this.props.history.push("/obras");
                     }
                     )} >

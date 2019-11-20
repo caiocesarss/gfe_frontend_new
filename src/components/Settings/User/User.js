@@ -14,24 +14,25 @@ import EditIcon from '@material-ui/icons/Edit';
 import CurrencyFormat from 'react-currency-format';
 import dateFormat from 'dateformat'
 
-import PageHeader from '../template/PageHeader';
-import { defaultClass } from '../../common/Constants';
-import { getList } from './PayablesActions';
-import { tableOptions} from '../../env';
-import Dialog from '../../common/Dialog';
+import PageHeader from '../../template/PageHeader';
+import { defaultClass } from '../../../common/Constants';
+import { getUserList, deleteUser} from './UserActions';
+import { tableOptions} from '../../../env';
+import Dialog from '../../../common/Dialog';
 
 const styles = defaultClass
 
-class Payables extends Component {
+class User extends Component {
   state = {
     openDialog: false,
     selectedRows: {}
   }
   componentWillMount() {
-    this.props.getList();
+    this.props.getUserList();
   }
 
   rowDelete(selectedRows) {
+    
     this.setState({selectedRows:selectedRows})
     this.setState({openDialog: true})
   }
@@ -43,11 +44,12 @@ class Payables extends Component {
   handleDialogAccept = () => {
     this.setState({openDialog: false})
     const selectedRows = this.state.selectedRows;
-    const list = this.props.list
+    const list = this.props.UserList
     selectedRows.data.map(val => {
       const dataIndex = val.dataIndex;
-      //this.props.deleteParty(list[dataIndex].party_id);
+      this.props.deleteUser(list[dataIndex].user_id);
     })
+    
   }
 
   getMuiTheme = () => createMuiTheme({
@@ -76,118 +78,37 @@ class Payables extends Component {
 
     const columns = [
       {
-        name: "invoice_id",
+        name: "user_id",
         options: {
           display: false
         }
       },
       {
-        name: "invoice_number",
-        label: "Num. Doc.",
+        name: "person_name",
+        label: "Nome",
         options: {
           filter: true,
           sort: true,
         }
       },
       {
-        name: "amount",
-        label: "Valor",
+        name: "email",
+        label: "E-mail",
         options: {
           filter: true,
           sort: true,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return ( 
-              <CurrencyFormat
-                  displayType={'text'}
-                  value={Number(value)}
-                  thousandSeparator="."
-                  decimalSeparator=","
-                  decimalScale={2}
-                  fixedDecimalScale={true}
-                  prefix={'R$ '} />
-            );
-          }
         }
       },
       {
-        name: "party",
-        label: "Credor",
+        name: "username",
+        label: "Username/Login",
         options: {
           filter: true,
           sort: true
+          
         }
       },
-      {
-        name: "invoice_date",
-        label: "Dt Emissão",
-        options: {
-          filter: true,
-          sort: true,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return ( 
-              value && dateFormat(value, "dd/mm/yyyy")
-              
-            );
-          }
-        }
-      },
-      {
-        name: "due_date",
-        label: "Dt Vencto.",
-        options: {
-          filter: true,
-          sort: true,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return ( 
-              value && dateFormat(value, "dd/mm/yyyy")
-              
-            );
-          }
-        }
-      },
-      {
-        name: "construction_name",
-        label: "Obra",
-        options: {
-          filter: true,
-          sort: true,
-        }
-      },
-      {
-        name: "document_type",
-        label: "Tipo Doc",
-        options: {
-          filter: true,
-          sort: true,
-        }
-      },
-      {
-        name: "payment_status",
-        label: "Status Pgto",
-        options: {
-          filter: true,
-          sort: true,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return value == 1 ? "PAGO" : "EM ABERTO";
-          }
-        }
-      },
-      {
-        name: "payment_date",
-        label: "Dt Pgto",
-        options: {
-          filter: true,
-          sort: true,
-        }
-      },
-      {
-        name: "major_item",
-        label: "Produtos",
-        options: {
-          filter: true,
-          sort: true,
-        }
-      },
+      
       {
         label: "Ações",
         options: {
@@ -198,7 +119,7 @@ class Payables extends Component {
             const invoiceId = tableMeta.rowData ? tableMeta.rowData[0] : '';
 
             return (
-              <Link component={RouterLink} to={`/payables/detalhes/${invoiceId}`}>
+              <Link component={RouterLink} to={`usuario/detalhes/${invoiceId}`}>
                     <IconButton size="small" aria-label="Edit">
                       <EditIcon />
                     </IconButton>
@@ -208,20 +129,25 @@ class Payables extends Component {
         }
       },
     ];
-    const data = this.props.payablesList || [];
+    const data = this.props.UserList || [];
 
     return (
 
       <main className={classes.content}>
 
         <PageHeader
-          title="Contas a Pagar"
+          title="User"
           subtitle="Registros"
-          linkTo="/payables/incluir"
+          linkTo="/settings/usuario/detalhes"
           buttonType="primary"
           showPageHeaderRight={true}
         />
-        <Dialog title="Excluir Registro" text="Tem certeza que deseja excluir este registro?" open={openDialog} handleClose={this.handleCloseDialog} handleDialogAccept={this.handleDialogAccept}/>
+        <Dialog 
+          title="Excluir Registro" 
+          text="Tem certeza que deseja excluir este registro?" 
+          open={openDialog} 
+          handleClose={this.handleCloseDialog} 
+          handleDialogAccept={this.handleDialogAccept}/>
         <Grid item xs={12}>
           <MuiThemeProvider theme={this.getMuiTheme()}>
             <MUIDataTable
@@ -240,15 +166,15 @@ class Payables extends Component {
 
 }
 
-Payables.propTypes = {
+User.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-const mapStateToPropos = state => ({ payablesList: state.payables.payablesList });
+const mapStateToPropos = state => ({ UserList: state.user.UserList });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getList }, dispatch);
+  bindActionCreators({ getUserList, deleteUser }, dispatch);
 
-const retorno = connect(mapStateToPropos, mapDispatchToProps)(Payables)
+const retorno = connect(mapStateToPropos, mapDispatchToProps)(User)
 
 export default withStyles(styles)(retorno)

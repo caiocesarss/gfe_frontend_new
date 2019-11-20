@@ -9,6 +9,9 @@ import SalesOrdersReducer from '../components/Sales/SalesOrdersReducer';
 import SelectReducer from '../common/SelectReducer';
 import LocationReducer from '../components/Location/LocationReducer';
 import ReceivablesReducer from '../components/Receivables/ReceivablesReducer';
+import CubReducer from '../components/Settings/Cub/CubReducer';
+import UserReducer from '../components/Settings/User/UserReducer';
+import AuthReducer from '../components/Auth/AuthReducer';
 
 const rootReducer = combineReducers ({
     construction: ConstructionReducer,
@@ -20,7 +23,10 @@ const rootReducer = combineReducers ({
     selectInputs: SelectReducer,
     form: formReducer,
     location: LocationReducer,
-    toastr: toastrReducer
+    toastr: toastrReducer,
+    cub: CubReducer,
+    user: UserReducer,
+    auth: AuthReducer
     
 })
 

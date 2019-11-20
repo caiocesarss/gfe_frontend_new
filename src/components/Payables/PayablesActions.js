@@ -32,8 +32,7 @@ export function getInvoiceById(invoice_id){
                                 invoice_date: dateFormat(data.invoice_date, "yyyy-mm-dd"),
                                 due_date: dateFormat(data.due_date, "yyyy-mm-dd"),
                                 payment_status: paymentStatus,
-                                payment_date: dateFormat(data.payment_date, "yyyy-mm-dd")
-                            }
+                                payment_date: data.payment_date ? dateFormat(data.payment_date, "yyyy-mm-dd") : ''                            }
             dispatch (getPartyAccounts({party_id: dataForm.party_id}))
 
             dispatch(initializeForm(dataForm))

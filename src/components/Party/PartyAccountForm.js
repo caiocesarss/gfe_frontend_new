@@ -39,7 +39,7 @@ class PartyAccountForm extends Component {
             stripMask: false,
             guide: false
           });
-
+ 
     return (
         <div style={header(10)} className={classes.content} ref={forwardedRef}>
         <h4>Conta</h4>
@@ -49,15 +49,18 @@ class PartyAccountForm extends Component {
                     <Grid item xs={12} md={3}>
                         <Field 
                             name="account_alias_name"
-                            textField={{fullWidth:true}}
+                            normalize={value => value.toUpperCase()}
+                            textField={{fullWidth:true, disabled:partyType === 'F'}}
                             component={LabelAndInput}
+
                             label="Nome da Conta"
                         /> 
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <Field 
                             name="legal_account_name"
-                            textField={{fullWidth:true}}
+                            normalize={value => value.toUpperCase()}
+                            textField={{fullWidth:true, disabled:partyType === 'F'}}
                             component={LabelAndInput}
                             label="Razão Social" 
                         />
@@ -74,6 +77,7 @@ class PartyAccountForm extends Component {
                     <Grid item xs={12} md={3}>
                         <Field 
                             name="doc2_value"
+                            normalize={value => value.toUpperCase()}
                             textField={{fullWidth:true}}
                             component={LabelAndInput}
                             label={`Número ${labelDoc2Number}`}

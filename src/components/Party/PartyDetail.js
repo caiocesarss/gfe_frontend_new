@@ -24,20 +24,20 @@ const selectItems = [
 ]
 
 class PartyDetail extends Component {
-    componentDidMount(){
+    componentDidMount() {
         //const { match: { params } } = this.props;
-        
+
         this.props.initializeForm();
         this.props.getPartyById(this.props.partyId);
     }
-    
+
     render() {
         const { forwardedRef, ...props } = this.props;
         const { classes, handleSubmit } = this.props;
         const { partyById } = this.props;
         let switchTypeName = '';
         let switchTypeLabel = '';
-        if (this.props.category == 'fornecedor'){
+        if (this.props.category == 'fornecedor') {
             switchTypeName = 'is_customer';
             switchTypeLabel = 'Cliente';
         } else {
@@ -45,25 +45,26 @@ class PartyDetail extends Component {
             switchTypeName = 'is_vendor';
             switchTypeLabel = 'Fornecedor';
         }
-     
+
         return (
             <div className={classes.content}>
                 <PageHeader
                     title={this.props.title}
                     subtitle={this.props.subtitle}
-                    
+
                     buttonType="primary"
                 />
                 <Grid item xs={12}>
                     <form role="form" onSubmit={handleSubmit(async data => {
-                                                                        const result = await this.props.updateParty(data)
-                                                                        this.props.redirectPage(`/pessoa/${this.props.category}`)
-                                                                        
-                                                                    })
-                                                }>
+                        const result = await this.props.updateParty(data)
+                        this.props.redirectPage(`/pessoa/${this.props.category}`)
+
+                    })
+                    }>
                         <Grid container spacing={1}>
                             <Grid item xs={6} md={3}>
                                 <Field name="name"
+                                    normalize={value => value.toUpperCase()}
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Nome" />
@@ -84,7 +85,7 @@ class PartyDetail extends Component {
                                     label={switchTypeLabel} />
                             </Grid>
                         </Grid>
-                        
+
                         <Grid container spacing={1}>
                             <Grid item xs={12} md={12}>
                                 <Button size="large" color="primary" type="submit" variant="contained" className={classes.button}>Enviar</Button>

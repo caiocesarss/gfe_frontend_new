@@ -71,13 +71,13 @@ class Partyform extends Component {
                                 
                                 <Field name="name"
                                     textField={{ fullWidth: true }}
+                                    normalize={value => value.toUpperCase()}
                                     component={LabelAndInput}
                                     label="Nome" />
                             </Grid>
 
                             <Grid item xs={6} md={2}>
                                 <Field name="type"
-                                normalize={value => value.toUpperCase()}
                                     component={InputSelect}
                                     selectField={{ fullWidth: true }}
                                     label="Tipo"
@@ -93,7 +93,7 @@ class Partyform extends Component {
                         </Grid>
                         <Grid container spacing={1}>
                             <Grid item xs={12} md={12}>
-                                <PartyAccountForm />
+                                <PartyAccountForm disabled={true} />
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}>

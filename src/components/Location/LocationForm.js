@@ -6,10 +6,10 @@ import Grid from '@material-ui/core/Grid';
 import { defaultClass } from '../../common/Constants';
 import PropTypes from 'prop-types';
 import { reduxForm, Field, formValueSelector } from 'redux-form';
+import { createTextMask } from 'redux-form-input-masks';
 
 import LabelAndInput from '../../common/LabelAndInput';
 import InputSelect from '../../common/InputSelect';
-import PageHeader from '../template/PageHeader';
 import { getUF, getCitiesByUF } from './LocationActions';
 
 const styles = defaultClass
@@ -30,6 +30,8 @@ class LocationForm extends Component {
     componentWillMount(){
         this.props.getUF();
     }
+
+
 
     render() {
         const { forwardedRef, ...props } = this.props;
@@ -56,6 +58,12 @@ class LocationForm extends Component {
             }
         } 
 
+        const DocMask = createTextMask({
+            pattern: '99.999-999',
+            stripMask: false,
+            guide: false
+          });
+
         return (
             <div style={header(10)} className={classes.content} ref={forwardedRef}>
                 <h4>Local</h4>
@@ -64,6 +72,7 @@ class LocationForm extends Component {
                             <Grid item xs={12} md={3}>
                                 <Field
                                     name="address_line"
+                                    normalize={value => value.toUpperCase()}
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Rua/Logradouro"
@@ -72,6 +81,7 @@ class LocationForm extends Component {
                             <Grid item xs={12} md={1}>
                                 <Field
                                     name="number"
+                                    normalize={value => value.toUpperCase()}
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Número"
@@ -80,6 +90,7 @@ class LocationForm extends Component {
                             <Grid item xs={12} md={2}>
                                 <Field
                                     name="complement"
+                                    normalize={value => value.toUpperCase()}
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Complemento"
@@ -88,6 +99,7 @@ class LocationForm extends Component {
                             <Grid item xs={12} md={2}>
                                 <Field
                                     name="district"
+                                    normalize={value => value.toUpperCase()}
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Bairro"
@@ -99,6 +111,7 @@ class LocationForm extends Component {
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="CEP"
+                                    {...DocMask}
                                 />
                             </Grid>
                             <Grid item xs={12} md={1}>

@@ -27,6 +27,12 @@ import PartyContacts from "./components/Party/PartyContacts";
 import PartyContactsForm from "./components/Party/PartyContactsForm";
 import Receivables from "./components/Receivables/Receivables";
 import ARDetail from "./components/Receivables/ARDetail";
+import Cub from "./components/Settings/Cub/Cub";
+import SettingsHome from "./components/Settings/SettingsHome";
+import CubForm from "./components/Settings/Cub/CubForm";
+import User from "./components/Settings/User/User";
+import UserForm from "./components/Settings/User/UserForm";
+import Rpayments from "./components/Receivables/Rpayments";
 
 
 export default props => {
@@ -61,6 +67,16 @@ export default props => {
     
     <Route exact path="/receivables" component={Receivables} />
     <Route exact path="/receivables/detalhes/:invoice_id" component={ARDetail} />
+    <Route exact path="/receivables/pagamentos/:invoice_id" component={ARDetail} />
+    <Route exact path="/receivables/registrarpgto/:invoice_id" component={Rpayments} />
+    
+    <Route exact path="/settings" component={SettingsHome} />
+    <Route exact path="/settings/cub" component={Cub} />
+    <Route exact path="/settings/cub/detalhes" component={CubForm} />
+    <Route exact path="/settings/cub/detalhes/:cub_id" component={CubForm} />
+    <Route exact path="/settings/usuario" component={User} />
+    <Route exact path="/settings/usuario/detalhes" component={UserForm} />
+    <Route exact path="/settings/usuario/detalhes/:user_id" component={UserForm} />
 
     <Route exact path="/vendas" component={SalesOrders} />
     <Route  path="/vendas/detalhes" component={SalesForm} />

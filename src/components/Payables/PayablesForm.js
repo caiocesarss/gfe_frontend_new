@@ -38,21 +38,21 @@ class PayablesForm extends Component {
         if (params.invoice_id) {
             this.props.getInvoiceById(params.invoice_id);
         }
-        
-        this.props.getParties({is_vendor: 1});
+
+        this.props.getParties({ is_vendor: 1 });
         this.props.getDocumentTypes();
         this.props.getFinGroups();
         this.props.getCustomList('constructions')
     }
 
-    componentDidMount(){
-        
+    componentDidMount() {
+
     }
 
     getPartyAccounts(party_id) {
         this.props.getPartyAccounts({ party_id })
     }
-    
+
 
     render() {
         const { classes, handleSubmit } = this.props;
@@ -109,10 +109,11 @@ class PayablesForm extends Component {
                         <Grid container spacing={1}>
                             <Grid item xs={6} md={1}>
                                 <Field name="invoice_id"
-                                type="hidden"
-                                component="input"
+                                    type="hidden"
+                                    component="input"
                                 />
                                 <Field name="invoice_number"
+                                    normalize={value => value.toUpperCase()}
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Núm. Doc." />
@@ -141,7 +142,7 @@ class PayablesForm extends Component {
                                     label="Data Emissão"
                                     textField={{ fullWidth: true }}
                                     component={DateFieldNative}
-                                    
+
                                 />
                             </Grid>
                             <Grid item xs={6} md={2}>
@@ -188,6 +189,7 @@ class PayablesForm extends Component {
                             </Grid>
                             <Grid item xs={6} md={4}>
                                 <Field name="payment_details"
+                                    normalize={value => value.toUpperCase()}
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Detalhes Pgto." />
@@ -204,12 +206,14 @@ class PayablesForm extends Component {
                             </Grid>
                             <Grid item xs={6} md={3}>
                                 <Field name="major_item"
+                                    normalize={value => value.toUpperCase()}
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Iten(s)" />
                             </Grid>
                             <Grid item xs={6} md={3}>
                                 <Field name="invoice_details"
+                                    normalize={value => value.toUpperCase()}
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Detalhes" />
@@ -236,7 +240,7 @@ class PayablesForm extends Component {
                                 <Field name="payment_status"
                                     type="checkbox"
                                     component={InputSwitch}
-                                    
+
                                     label="Pago" />
                             </Grid>
                         </Grid>

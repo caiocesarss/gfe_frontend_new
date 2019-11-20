@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function App() {
-  const classes = useStyles();
+  const classes = useStyles(); 
   return (
     <HashRouter basename="/app">
     <div className={classes.root}>

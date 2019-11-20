@@ -146,7 +146,7 @@ class SalesDetails extends Component {
                                                 value={Number(item.further_cub_amount)}
                                                 thousandSeparator="."
                                                 decimalSeparator=","
-                                               
+                                                decimalScale={4}
                                             />
                                         </TableCell>
                                         <TableCell style={cellDetail(80)}>Valor Residual:</TableCell>
@@ -208,6 +208,27 @@ class SalesDetails extends Component {
                                         </TableCell>
                                         <TableCell style={cellDetail(80)}>Dias Vencimento:</TableCell>
                                         <TableCell className={classes.text_bold}>{item.monthly_due_days}</TableCell>
+                                        <TableCell style={cellDetail(80)}>Valor residual:</TableCell>
+                                        <TableCell className={classes.text_bold}>
+                                            <CurrencyFormat
+                                                displayType={'text'}
+                                                value={Number(item.leftover_amount)}
+                                                thousandSeparator="."
+                                                decimalSeparator=","
+                                                prefix={'R$ '}
+                                                decimalScale={2}
+                                            />
+                                        </TableCell>
+                                        <TableCell style={cellDetail(80)}>Valor residual em CUB:</TableCell>
+                                        <TableCell className={classes.text_bold}>
+                                            <CurrencyFormat
+                                                displayType={'text'}
+                                                value={Number(item.leftover_cub_amount)}
+                                                thousandSeparator="."
+                                                decimalSeparator=","
+                                                decimalScale={4}
+                                            />
+                                        </TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>

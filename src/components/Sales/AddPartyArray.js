@@ -15,6 +15,7 @@ import InputSelect from '../../common/InputSelect';
 import { getParties, getPartyAccounts } from './SalesOrdersActions';
 import LabelAndInput from '../../common/LabelAndInput';
 import AddFurtherArray from './AddFurtherArray';
+import DateFieldNative from '../../common/DateFieldNative';
 
 const styles = defaultClass
 
@@ -83,7 +84,7 @@ class AddPartyArray extends Component {
 
   fillMonthlyParcelAmount(qt, cubExRate, monthlyAmount, inputChange, inputChange2){
     let monthlyAmountArray = document.getElementsByName(monthlyAmount)
-    let monthlyAmountValue = Number(monthlyAmountArray[0].value.replace(/[^\d,-]/g, ''));
+    let monthlyAmountValue = Number(monthlyAmountArray[0].value.replace(/[^\d,-]/g, '').replace(',', '.'));
     if (!cubExRate || cubExRate.length < 1) {
       return false;
     }
@@ -94,7 +95,6 @@ class AddPartyArray extends Component {
   }
 
   fillCubAmount(amount, cubExRate, inputChange){
-    //cubExRate = 1792;
     if (!cubExRate || cubExRate.length < 1) {
       return false;
     }
@@ -103,11 +103,10 @@ class AddPartyArray extends Component {
   }
 
   fillEntryCubAmount(amount, cubExRate, inputChange){
-    //cubExRate = 1792;
     if (!cubExRate || cubExRate.length < 1) {
       return false;
     }
-    const cubAmount = Number(amount.replace(/[^\d,-]/g, ''))/cubExRate
+    const cubAmount = Number(amount.replace(/[^\d,-]/g, '').replace(',', '.'))/cubExRate;
     this.props.change("SalesFormAddParty", inputChange, cubAmount.toFixed(4));
   }
 
@@ -200,7 +199,7 @@ class AddPartyArray extends Component {
                       name={`${member}.party_amount`}
                       textField={{fullWidth:true}}
                       component={LabelAndInput}
-                      label="Valor"
+                      label="Valor Assumido Pelo Cliente"
                       inputProps={{ name: `${member}.party_amount` }}
                       onBlur={data => this.fillCubAmount(data.target.value, saleData.cub_ex_rate, `${member}.cub_amount`)}
                       {...currencyMask}
@@ -213,13 +212,12 @@ class AddPartyArray extends Component {
                       component={LabelAndInput}
                       label="Valor em CUB"
                       inputProps={{ name: `${member}.cub_amount` }}
-                      
                       {...currencyMaskDec}
                   />
                 </Grid>
               </Grid>
               <Grid container spacing={1}>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={3}>
                   <Field 
                       name={`${member}.entry_amount`}
                       textField={{fullWidth:true}}
@@ -234,21 +232,7 @@ class AddPartyArray extends Component {
                       {...currencyMask}
                   />
                 </Grid>
-                {/*
-                  <Grid item xs={12} md={1}>
-                  <Field 
-                      name={`${member}.further_total_amount`}
-                      id="t1"
-                      textField={{fullWidth:true}}
-                      component={LabelAndInput}
-                      label="Total Reforços"
-                      inputProps={{ name: `${member}.further_total_amount` }}
-                      onBlur={data => this.fillAmountRemaining(data.target.value, saleData.cub_ex_rate, `${member}.entry_amount`, `${member}.party_amount`, `${member}.amount_remaining`, `${member}.further_cub_amount`)}
-                      {...currencyMask}
-                  />
-                  </Grid>
-                */}
-                <Grid item xs={12} md={1}>
+                <Grid item xs={12} md={2}>
                   <Field 
                       name={`${member}.amount_remaining`}
                       textField={{fullWidth:true}}
@@ -269,14 +253,14 @@ class AddPartyArray extends Component {
                       
                   />
                 </Grid>
-                <Grid item xs={12} md={1}>
+                <Grid item xs={12} md={2}>
                   <Field 
                       name={`${member}.monthly_amount`}
                       textField={{fullWidth:true}}
                       component={LabelAndInput}
                       label="Valor Mensal"
                       inputProps={{ name: `${member}.monthly_amount` }}
-                      {...currencyMask}
+                      {...currencyMaskDec2}
                   />
                 </Grid>
                 <Grid item xs={12} md={1}>
@@ -289,6 +273,21 @@ class AddPartyArray extends Component {
                       {...currencyMaskDec}
                   />
                 </Grid>
+                <Grid item xs={12} md={2}>
+                  <Field 
+                      name={`${member}.first_due_month`}
+                      textField={{fullWidth:true}}
+                      type='number'
+                      component={LabelAndInput}
+                      label="Mês 1&deg; Vencimento"
+                      inputProps={{ name: `${member}.first_due_month` }}
+                      
+                  />
+                </Grid>
+                
+                
+                </Grid>
+                <Grid container spacing={1}>
                 <Grid item xs={12} md={1}>
                   <Field 
                       name={`${member}.monthly_qt_parcel`}
@@ -299,7 +298,7 @@ class AddPartyArray extends Component {
                       onBlur={data => this.fillMonthlyParcelAmount(data.target.value, saleData.cub_ex_rate, `${member}.monthly_amount`, `${member}.monthly_parcel_amount`, `${member}.monthly_parcel_cub_amount`)}
                   />
                 </Grid>
-                <Grid item xs={12} md={1}>
+                <Grid item xs={12} md={2}>
                   <Field 
                       name={`${member}.monthly_parcel_amount`}
                       textField={{fullWidth:true}}
@@ -329,16 +328,27 @@ class AddPartyArray extends Component {
                       
                   />
                 </Grid>
-                <Grid item xs={12} md={1}>
+                <Grid item xs={12} md={2}>
                   <Field 
                       name={`${member}.leftover_amount`}
                       textField={{fullWidth:true}}
                       component={LabelAndInput}
                       label="Saldo Residual"
                       inputProps={{ name: `${member}.leftover_amount` }}
+                      onBlur={data => this.fillEntryCubAmount(data.target.value, saleData.cub_ex_rate, `${member}.leftover_cub_amount`)}
                       {...currencyMaskDec2}
                   />
+                  </Grid>
+                  <Grid item xs={12} md={2}>
+                  <Field 
+                      name={`${member}.leftover_cub_amount`}
+                      textField={{fullWidth:true}}
+                      component={LabelAndInput}
+                      label="Saldo Res. CUB"
+                      inputProps={{ name: `${member}.leftover_cub_amount` }}
+                       />
                 </Grid>
+
                 </Grid>
                 <Grid container spacing={1}>
                   <Grid item xs={12} md={1}></Grid>
