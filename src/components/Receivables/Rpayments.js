@@ -200,6 +200,7 @@ class Rpayments extends Component {
       },
       {
         label: "Ações",
+        name: "acoes",
         options: {
           filter: false,
           sort: false,
@@ -245,7 +246,7 @@ class Rpayments extends Component {
           progressBar
           closeOnToastrClick />
         <PageHeader
-          title={`Pagamentos da Fatura ${InvoiceById.invoice_id}, ${InvoiceById.construction_name}`}
+          title={`Pagamentos do Título ${InvoiceById.invoice_id}, ${InvoiceById.construction_name}`}
           subtitle="Detalhes"
           linkTo="/receivables/registratpgto/incluir"
           buttonType="primary"

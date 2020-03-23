@@ -31,6 +31,9 @@ import InputSwitch from '../../common/InputSwitch';
 const styles = defaultClass
 
 class PayablesForm extends Component {
+    state = {
+        isFormInValid: false
+    };
 
     componentWillMount() {
         const { match: { params } } = this.props;
@@ -47,6 +50,24 @@ class PayablesForm extends Component {
 
     componentDidMount() {
 
+    }
+
+    togglePaymentStatus(item, checked){
+        let paymentDate = document.getElementsByName('payment_date')
+        paymentDate = paymentDate[0].value;
+        if (checked && !paymentDate){
+            this.setState({ isFormInValid: true });
+            //this.props.change("payablesForm", 'submit', 'disabled');
+        } else {
+         
+            this.setState({ isFormInValid: false });
+        }
+    }
+
+    togglePaymentDate(item, value){
+        if (value) {
+            this.setState({ isFormInValid: false });
+        }
     }
 
     getPartyAccounts(party_id) {
@@ -231,7 +252,9 @@ class PayablesForm extends Component {
                             <Grid item xs={6} md={2}>
                                 <Field
                                     name="payment_date"
+                                
                                     label="Data Pagamento"
+                                    onChange={(item, value) => this.togglePaymentDate(item, value)}
                                     textField={{ fullWidth: true }}
                                     component={DateFieldNative}
                                 />
@@ -240,14 +263,14 @@ class PayablesForm extends Component {
                                 <Field name="payment_status"
                                     type="checkbox"
                                     component={InputSwitch}
-
+                                    onChange={(value, checked) => this.togglePaymentStatus(value, checked)}
                                     label="Pago" />
                             </Grid>
                         </Grid>
 
                         <Grid container spacing={1}>
                             <Grid item xs={12} md={12}>
-                                <Button size="large" color="primary" type="submit" variant="contained" className={classes.button}>Enviar</Button>
+                                <Button disabled={this.state.isFormInValid} size="large" color="primary" type="submit" variant="contained" className={classes.button}>Enviar</Button>
                             </Grid>
                         </Grid>
                     </form>

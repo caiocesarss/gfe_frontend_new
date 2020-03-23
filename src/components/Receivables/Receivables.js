@@ -22,6 +22,7 @@ import { defaultClass } from '../../common/Constants';
 import { getReceivablesList, reSendInvoice } from './ReceivablesActions';
 import { tableOptions } from '../../env';
 import Dialog from '../../common/Dialog';
+import CustomToolbarSelect from '../../common/CustomToolbarSelect';
 
 
 const styles = defaultClass
@@ -53,9 +54,14 @@ class Receivables extends Component {
       //this.props.deleteParty(list[dataIndex].party_id);
     })
   }
-
+ 
   reSendInvoice(invoiceId) {
     this.props.reSendInvoice(invoiceId);
+  }
+
+  setSome(selectedRows, dados){
+    console.log(selectedRows.data);
+    console.log(dados)
   }
 
   getMuiTheme = () => createMuiTheme({
@@ -271,6 +277,7 @@ class Receivables extends Component {
         }
       },
       {
+        name: 'acoes',
         label: "Ações",
         options: {
           filter: false,
@@ -303,7 +310,18 @@ class Receivables extends Component {
       },
     ];
     const data = this.props.receivablesList || [];
-
+    const dataTableOptions = {
+      ...tableOptions, 
+      onRowsDelete: data => this.rowDelete(data),
+      customToolbarSelect: selectedRows => (
+        <CustomToolbarSelect
+          selectedRows={selectedRows}
+          
+          flushRowsSelected={this.flushRowsSelected}
+          setSome={this.setSome}
+        />
+      )
+    }
     return (
 
       <main className={classes.content}>
@@ -329,7 +347,7 @@ class Receivables extends Component {
             <MUIDataTable
               data={data}
               columns={columns}
-              options={{ ...tableOptions, onRowsDelete: data => this.rowDelete(data) }}
+              options={dataTableOptions}
             />
           </MuiThemeProvider>
         </Grid>

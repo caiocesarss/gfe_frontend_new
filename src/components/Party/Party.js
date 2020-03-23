@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { withStyles } from '@material-ui/styles';
+//import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -78,11 +79,13 @@ class Party extends Component {
     const { classes } = this.props;
     const { openDialog, acceptDialog } = this.state;
     const list = this.props.list || [];
+ 
 
 
     const columns = [
       {
         name: "party_id",
+        label: " ",
         options: {
           display: false
         }
@@ -120,6 +123,7 @@ class Party extends Component {
       },
       {
         label: "Ações",
+        name: "acoes",
         options: {
           filter: true,
           sort: false,

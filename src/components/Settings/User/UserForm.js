@@ -91,12 +91,14 @@ class UserForm extends Component {
                             <Grid item xs={6} md={2}>
                                 <Field name="password"
                                     type="password"
+                                    normalize={value => value.toUpperCase()}
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}
                                     label="Senha" />
                             </Grid>
                             <Grid item xs={6} md={2}>
                                 <Field name="confirm_password"
+                                normalize={value => value.toUpperCase()}
                                     type="password"
                                     textField={{ fullWidth: true }}
                                     component={LabelAndInput}

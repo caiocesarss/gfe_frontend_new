@@ -57,3 +57,34 @@ export function defaultClass() {
     }
   }
 }
+
+export function loginClass(){
+  return {
+    root: {
+        height: '100vh',
+    },
+    image: {
+        backgroundImage: 'url(https://source.unsplash.com/random?building)',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    },
+    paper: {
+        margin: "100px",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        margin: 10
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: 15,
+    },
+    submit: {
+        height: 60,
+        margin: "24px 0px 16px",
+    },
+  }
+}

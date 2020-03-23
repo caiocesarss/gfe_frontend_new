@@ -305,7 +305,7 @@ class AddPartyArray extends Component {
                       component={LabelAndInput}
                       label="Vr parcela"
                       inputProps={{ name: `${member}.monthly_parcel_amount` }}
-                      {...currencyMask}
+                      {...currencyMaskDec}
                   />
                 </Grid>
                 <Grid item xs={12} md={1}>

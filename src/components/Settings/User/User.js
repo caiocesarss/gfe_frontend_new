@@ -111,6 +111,7 @@ class User extends Component {
       
       {
         label: "Ações",
+        name: "acoes",
         options: {
           filter: true,
           sort: false,
