@@ -65,6 +65,13 @@ export function setInvoicePayment(values) {
     }
 }
 
+export const setInvoicePaymentInLot = values => async dispatch => {
+  const request = await axios
+    .post(`${BASE_URL}/receivables/invoice/setinvoicepaymentinlot`, values)
+  toastr.success('Sucesso', 'Operação realizada com sucesso');
+  return { type: 'INVOICE_SAVED', payload: request }
+}
+
 export function getInvoiceById(invoice_id) {
     return async  dispatch => {
         const request = await axios.get(`${BASE_URL}/receivables/invoice/${invoice_id}`)
