@@ -19,7 +19,7 @@ import ReduxToastr from 'react-redux-toastr';
 
 import PageHeader from '../template/PageHeader';
 import { defaultClass } from '../../common/Constants';
-import { getReceivablesList, reSendInvoice } from './ReceivablesActions';
+import { getReceivablesList, reSendInvoice, setInvoicePaymentInLot } from './ReceivablesActions';
 import { tableOptions } from '../../env';
 import Dialog from '../../common/Dialog';
 import CustomToolbarSelect from '../../common/CustomToolbarSelect';
@@ -54,12 +54,12 @@ class Receivables extends Component {
       //this.props.deleteParty(list[dataIndex].party_id);
     })
   }
- 
+
   reSendInvoice(invoiceId) {
     this.props.reSendInvoice(invoiceId);
   }
 
-  setSome(selectedRows, dados){
+  setSome(selectedRows, dados) {
     console.log(selectedRows.data);
     console.log(dados)
   }
@@ -84,6 +84,17 @@ class Receivables extends Component {
       }
     }
   });
+
+  onConfirmPayment = selectedRows => {
+    const { receivablesList, setInvoicePaymentInLot } = this.props;
+    const data = receivablesList || [];
+    const items = selectedRows.data
+      .map(({ dataIndex }) => data[dataIndex])
+      .filter(({ payment_status }) => ['PENDENTE', 'PARCIAL'].indexOf(payment_status) >= 0)
+      .map(({ invoice_id }) => invoice_id);
+
+    setInvoicePaymentInLot(items);
+  };
 
   render() {
     const { classes } = this.props;
@@ -311,14 +322,11 @@ class Receivables extends Component {
     ];
     const data = this.props.receivablesList || [];
     const dataTableOptions = {
-      ...tableOptions, 
+      ...tableOptions,
       onRowsDelete: data => this.rowDelete(data),
       customToolbarSelect: selectedRows => (
         <CustomToolbarSelect
-          selectedRows={selectedRows}
-          
-          flushRowsSelected={this.flushRowsSelected}
-          setSome={this.setSome}
+          onConfirmPayment={() => this.onConfirmPayment(selectedRows)}
         />
       )
     }
@@ -366,7 +374,7 @@ Receivables.propTypes = {
 const mapStateToPropos = state => ({ receivablesList: state.receivables.receivablesList });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getReceivablesList, reSendInvoice }, dispatch);
+  bindActionCreators({ getReceivablesList, reSendInvoice, setInvoicePaymentInLot }, dispatch);
 
 const retorno = connect(mapStateToPropos, mapDispatchToProps)(Receivables)
 
