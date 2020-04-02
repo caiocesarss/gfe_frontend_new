@@ -85,15 +85,17 @@ class Receivables extends Component {
     }
   });
 
-  onConfirmPayment = selectedRows => {
+  onConfirmPayment = (selectedRows, paidValue = 0) => {
+    if (paidValue <= 0) return;
+
     const { receivablesList, setInvoicePaymentInLot } = this.props;
     const data = receivablesList || [];
-    const items = selectedRows.data
+    const ids = selectedRows.data
       .map(({ dataIndex }) => data[dataIndex])
       .filter(({ payment_status }) => ['PENDENTE', 'PARCIAL'].indexOf(payment_status) >= 0)
       .map(({ invoice_id }) => invoice_id);
 
-    setInvoicePaymentInLot(items);
+    setInvoicePaymentInLot(ids, paidValue);
   };
 
   render() {
@@ -326,7 +328,7 @@ class Receivables extends Component {
       onRowsDelete: data => this.rowDelete(data),
       customToolbarSelect: selectedRows => (
         <CustomToolbarSelect
-          onConfirmPayment={() => this.onConfirmPayment(selectedRows)}
+          onConfirmPayment={paidValue => this.onConfirmPayment(selectedRows, paidValue)}
         />
       )
     }

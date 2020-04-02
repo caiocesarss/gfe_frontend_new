@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
-import { IconButton, Tooltip } from '@material-ui/core';
+import {
+  IconButton,
+  Tooltip,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField
+} from '@material-ui/core';
 import DeleteIcon from "@material-ui/icons/Delete";
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import FilterIcon from "@material-ui/icons/FilterList";
 
-import Dialog from '../common/Dialog';
 
 const CustomToolbarSelect = ({ onConfirmPayment }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [value, setValue] = useState(0);
 
   const onClick = () => {
     throw Error('not implemented');
@@ -15,7 +25,7 @@ const CustomToolbarSelect = ({ onConfirmPayment }) => {
 
   const handleDialogAccept = () => {
     setIsOpen(false);
-    onConfirmPayment();
+    onConfirmPayment(value);
   };
 
   return (
@@ -38,12 +48,33 @@ const CustomToolbarSelect = ({ onConfirmPayment }) => {
         </IconButton>
       </Tooltip>
       <Dialog
-        title="Baixar registros"
-        text="Tem certeza que deseja realizar a baixa dos pagamentos selecionados?"
         open={isOpen}
-        handleClose={() => setIsOpen(false)}
-        handleDialogAccept={handleDialogAccept}
-      />
+        onClose={() => setIsOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle>Baixar registros</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Escolha o valor a ser baixado e confirme
+          </DialogContentText>
+          <TextField
+            label="Valor da baixa"
+            fullWidth
+            type="number"
+            value={value}
+            onChange={e => setValue(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" onClick={() => setIsOpen(false)} color="primary" autoFocus>
+            Cancelar
+          </Button>
+          <Button variant="contained" onClick={handleDialogAccept} color="secondary" >
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
